@@ -58,6 +58,35 @@ codequest/
 5. Opcional: en `codequest_db` → **Más** → **Diseñador** puedes ver el
    diagrama de relaciones.
 
+## Configuración del backend
+
+Copia `backend/config/config.example.php` como `backend/config/config.php`.
+Con XAMPP recién instalado no hay que cambiar nada (usuario `root` sin
+contraseña). `config.php` no se sube a Git.
+
+## Probar la API (Thunder Client)
+
+Instala la extensión **Thunder Client** en VS Code. Con Apache y MySQL
+encendidos, usa la URL base `http://localhost/codequest/backend/api` y en
+las peticiones POST elige **Body → JSON**. Thunder Client guarda la cookie
+de sesión automáticamente.
+
+| # | Petición | Cuerpo JSON | Resultado esperado |
+| --- | --- | --- | --- |
+| 1 | `GET /health` | — | 200, `"database": "conectada"` |
+| 2 | `GET /auth/me` | — | 401, «Debes iniciar sesión para continuar.» |
+| 3 | `POST /auth/register` | `{"full_name":"A","email":"malo","password":"abc","password_confirmation":"x"}` | 422 con un error por campo |
+| 4 | `POST /auth/register` | `{"full_name":"Ana María Pérez","email":"ana@colegio.edu.co","password":"codigo123","password_confirmation":"codigo123"}` | 201 con el usuario, `"needs_diagnostic": true` |
+| 5 | Repetir la 4 | igual | 409, correo ya registrado |
+| 6 | `GET /auth/me` | — | 200 con el usuario (la sesión quedó iniciada) |
+| 7 | `POST /auth/logout` | — | 200, «Sesión cerrada correctamente.» |
+| 8 | `GET /auth/me` | — | 401 |
+| 9 | `POST /auth/login` | `{"email":"ana@colegio.edu.co","password":"otra1234"}` | 401, «Correo o contraseña incorrectos.» |
+| 10 | `POST /auth/login` | `{"email":"ana@colegio.edu.co","password":"codigo123"}` | 200 con el usuario |
+
+En phpMyAdmin, la tabla `users` debe mostrar la contraseña como un hash que
+empieza por `$2y$10$`, nunca el texto original.
+
 ## Problemas frecuentes
 
 | Síntoma | Causa probable | Solución |
@@ -66,6 +95,7 @@ codequest/
 | React dice «No se pudo conectar con la API» | Apache apagado o proyecto en otra carpeta | Enciende Apache y confirma la ruta del paso 1 |
 | Apache no arranca | Puerto 80 ocupado (Skype, IIS) | Cierra el programa o cambia el puerto en XAMPP y en `vite.config.js` |
 | MySQL no arranca en XAMPP | Puerto 3306 ocupado por otro MySQL instalado | Detén el otro servicio de MySQL en Servicios de Windows |
+| La API responde 500 «Falta backend/config/config.php» | No se creó el archivo de configuración | Copia `config.example.php` como `config.php` |
 | `#1046 No database selected` | Se ejecutó el seed sin el schema | Ejecuta primero `01_schema.sql` |
 | `npm` no se reconoce | Node.js no instalado o terminal abierta antes de instalarlo | Instala Node.js LTS y abre una terminal nueva |
 
@@ -76,7 +106,7 @@ codequest/
 | 0 | Análisis y planificación | Completada |
 | 1 | Entorno de desarrollo | Completada |
 | 2 | Base de datos | Completada |
-| 3 | API base y autenticación | Pendiente |
+| 3 | API base y autenticación | Completada |
 | 4 | Identidad visual, inicio y acceso | Pendiente |
 | 5 | Diagnóstico | Pendiente |
 | 6 | Módulos y lecciones | Pendiente |

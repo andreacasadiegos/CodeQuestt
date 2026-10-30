@@ -7,8 +7,9 @@
 const BASE_URL = '/api';
 
 /**
- * Hace una petición a la API y devuelve el JSON de respuesta.
- * Si el servidor responde con error, lanza un Error con el mensaje recibido.
+ * Hace una petición a la API y devuelve el contenido de "data".
+ * Si el servidor responde con error, lanza un Error con el mensaje recibido
+ * y, en error.fields, los errores por campo de los formularios.
  *
  * @param {string} path   Ruta del endpoint, por ejemplo '/health'.
  * @param {object} options { method, body }
@@ -31,8 +32,9 @@ export async function apiRequest(path, { method = 'GET', body } = {}) {
   if (!response.ok || data === null) {
     const error = new Error(data?.error ?? `No se pudo conectar con la API (código ${response.status})`);
     error.status = response.status;
+    error.fields = data?.errors ?? {};
     throw error;
   }
 
-  return data;
+  return data.data;
 }

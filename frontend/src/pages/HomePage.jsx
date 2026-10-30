@@ -31,7 +31,7 @@ export default function HomePage() {
         {health && (
           <div className="alert alert-success mb-0" role="status">
             <i className="bi bi-check-circle-fill me-2" aria-hidden="true" />
-            {health.mensaje} (PHP {health.php})
+            {health.mensaje} (PHP {health.php}, base de datos {health.database})
           </div>
         )}
 
