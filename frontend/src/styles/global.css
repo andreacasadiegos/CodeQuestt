@@ -1,0 +1,25 @@
+/* Estilos base compartidos por todas las páginas. */
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(124, 58, 237, 0.25), transparent 40%),
+    radial-gradient(circle at 85% 90%, rgba(59, 130, 246, 0.18), transparent 45%),
+    var(--cq-bg);
+  color: var(--cq-text);
+}
+
+a {
+  color: var(--cq-accent);
+}
+
+.cq-card {
+  background: var(--cq-surface);
+  border: var(--cq-border);
+  border-radius: var(--cq-radius);
+  box-shadow: var(--cq-shadow);
+}
+
+.cq-muted {
+  color: var(--cq-text-muted);
+}

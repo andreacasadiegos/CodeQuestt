@@ -1,0 +1,6 @@
+# Envía todas las peticiones de la API a index.php,
+# salvo que se pida un archivo que exista de verdad.
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

@@ -1,0 +1,15 @@
+# Dependencias y compilados del frontend
+frontend/node_modules/
+frontend/dist/
+
+# Credenciales locales del backend (se versiona solo config.example.php)
+backend/config/config.php
+
+# Sistema operativo y editor
+.DS_Store
+Thumbs.db
+.vscode/*
+!.vscode/extensions.json
+
+# Registros
+*.log

@@ -1,0 +1,32 @@
+/*
+ * Identidad visual de CodeQuest.
+ * Todos los colores y medidas se toman de aquí; ningún componente
+ * debe escribir un color directamente.
+ */
+:root {
+  /* Fondos (azul oscuro) */
+  --cq-bg: #0f0b24;
+  --cq-surface: #1b1340;
+  --cq-surface-2: #251a57;
+
+  /* Marca (morado y violeta) */
+  --cq-primary: #7c3aed;
+  --cq-primary-hover: #6d28d9;
+  --cq-accent: #a78bfa;
+  --cq-blue: #3b82f6;
+
+  /* Texto */
+  --cq-text: #f4f1ff;
+  --cq-text-muted: #b8b0d9;
+
+  /* Estados */
+  --cq-success: #34d399;
+  --cq-danger: #f87171;
+  --cq-warning: #fbbf24;
+
+  /* Forma */
+  --cq-radius: 16px;
+  --cq-radius-sm: 10px;
+  --cq-border: 1px solid rgba(167, 139, 250, 0.25);
+  --cq-shadow: 0 10px 30px rgba(15, 11, 36, 0.45);
+}
