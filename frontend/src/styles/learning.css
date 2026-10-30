@@ -1,0 +1,126 @@
+/* Diagnóstico, panel y (en próximas etapas) actividades. */
+.cq-codeblock {
+  margin: 0 0 1.25rem;
+  padding: 1rem 1.25rem;
+  border-radius: var(--cq-radius-sm);
+  background: rgba(13, 10, 34, 0.75);
+  border: var(--cq-border);
+  font-family: var(--cq-font-code);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  color: #e9e5ff;
+  white-space: pre-wrap;
+}
+
+.cq-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  padding: 0.95rem 1.1rem;
+  border-radius: var(--cq-radius-sm);
+  border: var(--cq-border);
+  background: rgba(13, 10, 34, 0.45);
+  color: var(--cq-text);
+  text-align: left;
+  font-size: 1rem;
+  transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+
+.cq-choice:hover {
+  border-color: var(--cq-accent);
+  transform: translateX(3px);
+}
+
+.cq-choice.is-selected {
+  border-color: var(--cq-accent);
+  background: var(--cq-accent-soft);
+  box-shadow: var(--cq-glow);
+}
+
+.cq-choice-key {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  background: var(--cq-surface-3);
+  font-family: var(--cq-font-code);
+  font-weight: 700;
+  color: var(--cq-accent);
+}
+
+.cq-choice.is-selected .cq-choice-key {
+  background: var(--cq-primary);
+  color: #fff;
+}
+
+.cq-choice-lg {
+  padding: 1.2rem 1.25rem;
+}
+
+.cq-choice-lg i {
+  font-size: 1.6rem;
+  color: var(--cq-accent);
+}
+
+.cq-step-dots {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.cq-step-dots span {
+  width: 28px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--cq-surface-3);
+}
+
+.cq-step-dots span.done {
+  background: var(--cq-accent);
+}
+
+.cq-step-dots span.current {
+  background: var(--cq-gradient);
+}
+
+.cq-result-hero {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+}
+
+.cq-score-ring {
+  display: inline-grid;
+  place-items: center;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+  background:
+    radial-gradient(closest-side, var(--cq-surface) 79%, transparent 80% 100%),
+    conic-gradient(var(--cq-accent) calc(var(--score) * 1%), var(--cq-surface-3) 0);
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.cq-review-item {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1rem 0;
+  border-top: var(--cq-border);
+}
+
+.cq-review-item .bi-check-circle-fill { color: var(--cq-success); }
+.cq-review-item .bi-x-circle-fill { color: var(--cq-danger); }
+
+.cq-stat-card {
+  padding: 1.4rem;
+  height: 100%;
+}
+
+.cq-stat-card .cq-stat-value {
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.1;
+}

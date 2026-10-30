@@ -53,6 +53,7 @@ codequest/
 3. Ejecuta, en este orden, el contenido de:
    1. `database/01_schema.sql` (crea `codequest_db` con 16 tablas; **borra la base si ya existía**).
    2. `database/02_seed_catalogos.sql` (rutas, niveles, módulos e insignias).
+   3. `database/03_seed_diagnostico.sql` (prueba diagnóstica de 5 preguntas).
 4. Ejecuta `database/verificacion.sql`. Debe mostrar 16 tablas, 26 claves
    foráneas y 2 rutas, 5 niveles, 3 módulos y 8 insignias.
 5. Opcional: en `codequest_db` → **Más** → **Diseñador** puedes ver el
@@ -87,6 +88,23 @@ de sesión automáticamente.
 En phpMyAdmin, la tabla `users` debe mostrar la contraseña como un hash que
 empieza por `$2y$10$`, nunca el texto original.
 
+## Probar el diagnóstico (Etapa 5)
+
+Regístrate en <http://localhost:5173>: entrarás directo al diagnóstico.
+Las respuestas correctas de la prueba son **A, B, B, C, C**. Así se asigna la ruta:
+
+| Autoevaluación | Aciertos | Ruta |
+| --- | --- | --- |
+| No tengo conocimientos | cualquiera | Básica |
+| Tengo conocimientos básicos | 4 o 5 | Intermedia |
+| Tengo conocimientos básicos | 0 a 3 | Básica (con posibilidad de avanzar) |
+| Ya he estudiado programación | 3 a 5 | Intermedia |
+| Ya he estudiado programación | 0 a 2 | Básica (con posibilidad de avanzar) |
+
+En phpMyAdmin verás el resultado en `diagnostics`, `attempts`, `attempt_answers`
+y en `users.path_id`. El diagnóstico solo se puede hacer una vez: un segundo
+envío responde 409.
+
 ## Problemas frecuentes
 
 | Síntoma | Causa probable | Solución |
@@ -108,7 +126,7 @@ empieza por `$2y$10$`, nunca el texto original.
 | 2 | Base de datos | Completada |
 | 3 | API base y autenticación | Completada |
 | 4 | Identidad visual, inicio y acceso | Completada |
-| 5 | Diagnóstico | Pendiente |
+| 5 | Diagnóstico | Completada |
 | 6 | Módulos y lecciones | Pendiente |
 | 7 | Actividades y calificación | Pendiente |
 | 8 | Gamificación, panel y cierre | Pendiente |

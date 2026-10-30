@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import MainLayout from './components/layout/MainLayout.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
 import DiagnosticPage from './pages/DiagnosticPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
@@ -12,7 +13,7 @@ import PublicOnlyRoute from './routes/PublicOnlyRoute.jsx';
 
 /**
  * Definición de rutas de la aplicación.
- * El panel (/panel) y los módulos se agregan en las siguientes etapas.
+ * Los módulos y actividades se agregan en las siguientes etapas.
  */
 export default function App() {
   return (
@@ -29,6 +30,10 @@ export default function App() {
 
             <Route element={<ProtectedRoute onlyBeforeDiagnostic />}>
               <Route path="/diagnostico" element={<DiagnosticPage />} />
+            </Route>
+
+            <Route element={<ProtectedRoute requireDiagnostic />}>
+              <Route path="/panel" element={<DashboardPage />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

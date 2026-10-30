@@ -47,6 +47,19 @@ final class User
         return $stmt->fetch() ?: null;
     }
 
+    /** Bloquea la fila del usuario hasta el final de la transacción actual. */
+    public function lockForUpdate(int $id): void
+    {
+        $stmt = $this->db->prepare('SELECT id FROM users WHERE id = ? FOR UPDATE');
+        $stmt->execute([$id]);
+    }
+
+    public function assignPath(int $id, int $pathId): void
+    {
+        $stmt = $this->db->prepare('UPDATE users SET path_id = ? WHERE id = ?');
+        $stmt->execute([$pathId, $id]);
+    }
+
     public function updatePasswordHash(int $id, string $passwordHash): void
     {
         $stmt = $this->db->prepare('UPDATE users SET password_hash = ? WHERE id = ?');
