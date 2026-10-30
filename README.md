@@ -45,6 +45,19 @@ codequest/
 5. Abre <http://localhost:5173>. Debe aparecer el mensaje
    «La API de CodeQuest está funcionando».
 
+## Base de datos
+
+1. En el XAMPP Control Panel, pulsa **Start** en **MySQL**.
+2. Abre <http://localhost/phpmyadmin> y entra en la pestaña **SQL** (sin
+   seleccionar ninguna base).
+3. Ejecuta, en este orden, el contenido de:
+   1. `database/01_schema.sql` (crea `codequest_db` con 16 tablas; **borra la base si ya existía**).
+   2. `database/02_seed_catalogos.sql` (rutas, niveles, módulos e insignias).
+4. Ejecuta `database/verificacion.sql`. Debe mostrar 16 tablas, 26 claves
+   foráneas y 2 rutas, 5 niveles, 3 módulos y 8 insignias.
+5. Opcional: en `codequest_db` → **Más** → **Diseñador** puedes ver el
+   diagrama de relaciones.
+
 ## Problemas frecuentes
 
 | Síntoma | Causa probable | Solución |
@@ -52,6 +65,8 @@ codequest/
 | `/health` responde 404 de Apache | `mod_rewrite` desactivado o `.htaccess` ignorado | En `C:\xampp\apache\conf\httpd.conf`, verifica que `LoadModule rewrite_module` no tenga `#` y que `<Directory "C:/xampp/htdocs">` tenga `AllowOverride All`. Reinicia Apache |
 | React dice «No se pudo conectar con la API» | Apache apagado o proyecto en otra carpeta | Enciende Apache y confirma la ruta del paso 1 |
 | Apache no arranca | Puerto 80 ocupado (Skype, IIS) | Cierra el programa o cambia el puerto en XAMPP y en `vite.config.js` |
+| MySQL no arranca en XAMPP | Puerto 3306 ocupado por otro MySQL instalado | Detén el otro servicio de MySQL en Servicios de Windows |
+| `#1046 No database selected` | Se ejecutó el seed sin el schema | Ejecuta primero `01_schema.sql` |
 | `npm` no se reconoce | Node.js no instalado o terminal abierta antes de instalarlo | Instala Node.js LTS y abre una terminal nueva |
 
 ## Etapas
@@ -60,7 +75,7 @@ codequest/
 | --- | --- | --- |
 | 0 | Análisis y planificación | Completada |
 | 1 | Entorno de desarrollo | Completada |
-| 2 | Base de datos | Pendiente |
+| 2 | Base de datos | Completada |
 | 3 | API base y autenticación | Pendiente |
 | 4 | Identidad visual, inicio y acceso | Pendiente |
 | 5 | Diagnóstico | Pendiente |
