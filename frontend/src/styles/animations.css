@@ -1,0 +1,41 @@
+/* Animaciones sutiles. Se desactivan si el sistema pide menos movimiento. */
+@keyframes cq-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes cq-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes cq-blink {
+  50% { opacity: 0; }
+}
+
+@keyframes cq-pop {
+  0%   { opacity: 0; transform: translateY(8px) scale(0.9); }
+  20%  { opacity: 1; transform: translateY(0) scale(1.05); }
+  80%  { opacity: 1; transform: translateY(-6px) scale(1); }
+  100% { opacity: 0; transform: translateY(-14px) scale(1); }
+}
+
+@keyframes cq-spin {
+  to { transform: rotate(360deg); }
+}
+
+.cq-fade-up { animation: cq-fade-up 0.6s ease both; }
+.cq-delay-1 { animation-delay: 0.1s; }
+.cq-delay-2 { animation-delay: 0.2s; }
+.cq-delay-3 { animation-delay: 0.3s; }
+.cq-float   { animation: cq-float 6s ease-in-out infinite; }
+.cq-caret   { animation: cq-blink 1s steps(1) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

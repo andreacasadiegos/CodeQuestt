@@ -1,20 +1,66 @@
 /* Estilos base compartidos por todas las páginas. */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   min-height: 100vh;
   margin: 0;
+  font-family: var(--cq-font);
   background:
-    radial-gradient(circle at 15% 10%, rgba(124, 58, 237, 0.25), transparent 40%),
-    radial-gradient(circle at 85% 90%, rgba(59, 130, 246, 0.18), transparent 45%),
+    radial-gradient(900px 500px at 10% -10%, rgba(124, 58, 237, 0.28), transparent 60%),
+    radial-gradient(700px 500px at 100% 100%, rgba(59, 130, 246, 0.16), transparent 60%),
     var(--cq-bg);
+  background-attachment: fixed;
   color: var(--cq-text);
+}
+
+/* Rejilla tenue tipo "editor de código" sobre el fondo. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(167, 139, 250, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 139, 250, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at 50% 30%, black, transparent 75%);
 }
 
 a {
   color: var(--cq-accent);
+  text-decoration: none;
 }
 
+a:hover {
+  color: var(--cq-text);
+}
+
+::selection {
+  background: var(--cq-primary);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 3px solid var(--cq-accent);
+  outline-offset: 2px;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+/* ---------- Utilidades de marca ---------- */
 .cq-card {
-  background: var(--cq-surface);
+  background: linear-gradient(180deg, var(--cq-surface-2), var(--cq-surface));
   border: var(--cq-border);
   border-radius: var(--cq-radius);
   box-shadow: var(--cq-shadow);
@@ -22,4 +68,149 @@ a {
 
 .cq-muted {
   color: var(--cq-text-muted);
+}
+
+.cq-code {
+  font-family: var(--cq-font-code);
+}
+
+.cq-gradient-text {
+  background: linear-gradient(90deg, #c4b5fd, #a78bfa 40%, #60a5fa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.cq-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--cq-accent-soft);
+  border: var(--cq-border);
+  color: var(--cq-accent);
+  font-family: var(--cq-font-code);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.cq-section-title {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Botones ---------- */
+.btn-cq {
+  --bs-btn-padding-x: 1.4rem;
+  --bs-btn-padding-y: 0.7rem;
+  --bs-btn-font-weight: 600;
+  --bs-btn-border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.btn-cq:hover {
+  transform: translateY(-2px);
+}
+
+.btn-cq:active {
+  transform: translateY(0);
+}
+
+.btn-cq-primary {
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-color: #fff;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-border-color: transparent;
+  background: var(--cq-gradient);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.45);
+}
+
+.btn-cq-primary:hover {
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.6);
+}
+
+.btn-cq-outline {
+  --bs-btn-color: var(--cq-text);
+  --bs-btn-hover-color: var(--cq-text);
+  --bs-btn-active-color: var(--cq-text);
+  --bs-btn-border-color: var(--cq-border-color);
+  --bs-btn-hover-border-color: var(--cq-accent);
+  --bs-btn-hover-bg: var(--cq-accent-soft);
+  --bs-btn-active-bg: var(--cq-accent-soft);
+  --bs-btn-active-border-color: var(--cq-accent);
+}
+
+/* ---------- Formularios ---------- */
+.cq-form .form-label {
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--cq-text);
+}
+
+.cq-form .form-control {
+  background: rgba(13, 10, 34, 0.6);
+  border: var(--cq-border);
+  border-radius: var(--cq-radius-sm);
+  color: var(--cq-text);
+  padding: 0.75rem 1rem;
+}
+
+.cq-form .form-control::placeholder {
+  color: var(--cq-text-dim);
+}
+
+.cq-form .form-control:focus {
+  background: rgba(13, 10, 34, 0.8);
+  border-color: var(--cq-accent);
+  box-shadow: 0 0 0 0.2rem rgba(167, 139, 250, 0.25);
+  color: var(--cq-text);
+}
+
+.cq-form .form-control.is-invalid {
+  border-color: var(--cq-danger);
+  background-image: none;
+}
+
+.cq-form .invalid-feedback {
+  color: var(--cq-danger);
+}
+
+.cq-form .input-group .btn {
+  border: var(--cq-border);
+  border-left: 0;
+  border-radius: 0 var(--cq-radius-sm) var(--cq-radius-sm) 0;
+  color: var(--cq-text-muted);
+  background: rgba(13, 10, 34, 0.6);
+}
+
+.cq-form .input-group .form-control {
+  border-right: 0;
+}
+
+.cq-alert {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  padding: 0.8rem 1rem;
+  border-radius: var(--cq-radius-sm);
+  font-size: 0.95rem;
+}
+
+.cq-alert-danger {
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  color: #fecaca;
+}
+
+.cq-alert-success {
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.4);
+  color: #a7f3d0;
 }

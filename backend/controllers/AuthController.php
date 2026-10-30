@@ -5,7 +5,7 @@
  * POST /api/auth/register
  * POST /api/auth/login
  * POST /api/auth/logout   (privada)
- * GET  /api/auth/me       (privada)
+ * GET  /api/auth/me       (pública: user = null si no hay sesión)
  */
 
 declare(strict_types=1);
@@ -106,8 +106,15 @@ final class AuthController
         Response::json(['message' => 'Sesión cerrada correctamente.']);
     }
 
+    /**
+     * Estudiante con sesión activa, o null si no hay sesión.
+     * Es pública para que React pueda preguntar sin provocar un error 401.
+     */
     public function me(array $params): never
     {
-        Response::json(['user' => $this->users->findProfile($params['userId'])]);
+        $userId = Session::userId();
+        $user = $userId === null ? null : $this->users->findProfile($userId);
+
+        Response::json(['user' => $user]);
     }
 }

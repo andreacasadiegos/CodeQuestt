@@ -74,13 +74,13 @@ de sesión automáticamente.
 | # | Petición | Cuerpo JSON | Resultado esperado |
 | --- | --- | --- | --- |
 | 1 | `GET /health` | — | 200, `"database": "conectada"` |
-| 2 | `GET /auth/me` | — | 401, «Debes iniciar sesión para continuar.» |
+| 2 | `GET /auth/me` | — | 200 con `"user": null` (no hay sesión) |
 | 3 | `POST /auth/register` | `{"full_name":"A","email":"malo","password":"abc","password_confirmation":"x"}` | 422 con un error por campo |
 | 4 | `POST /auth/register` | `{"full_name":"Ana María Pérez","email":"ana@colegio.edu.co","password":"codigo123","password_confirmation":"codigo123"}` | 201 con el usuario, `"needs_diagnostic": true` |
 | 5 | Repetir la 4 | igual | 409, correo ya registrado |
 | 6 | `GET /auth/me` | — | 200 con el usuario (la sesión quedó iniciada) |
 | 7 | `POST /auth/logout` | — | 200, «Sesión cerrada correctamente.» |
-| 8 | `GET /auth/me` | — | 401 |
+| 8 | `GET /auth/me` | — | 200 con `"user": null` |
 | 9 | `POST /auth/login` | `{"email":"ana@colegio.edu.co","password":"otra1234"}` | 401, «Correo o contraseña incorrectos.» |
 | 10 | `POST /auth/login` | `{"email":"ana@colegio.edu.co","password":"codigo123"}` | 200 con el usuario |
 
@@ -107,7 +107,7 @@ empieza por `$2y$10$`, nunca el texto original.
 | 1 | Entorno de desarrollo | Completada |
 | 2 | Base de datos | Completada |
 | 3 | API base y autenticación | Completada |
-| 4 | Identidad visual, inicio y acceso | Pendiente |
+| 4 | Identidad visual, inicio y acceso | Completada |
 | 5 | Diagnóstico | Pendiente |
 | 6 | Módulos y lecciones | Pendiente |
 | 7 | Actividades y calificación | Pendiente |

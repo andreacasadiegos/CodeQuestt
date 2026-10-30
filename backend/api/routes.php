@@ -14,4 +14,4 @@ $router->get('/health', [HealthController::class, 'show']);
 $router->post('/auth/register', [AuthController::class, 'register']);
 $router->post('/auth/login', [AuthController::class, 'login']);
 $router->post('/auth/logout', [AuthController::class, 'logout'], true);
-$router->get('/auth/me', [AuthController::class, 'me'], true);
+$router->get('/auth/me', [AuthController::class, 'me']); // Pública: devuelve user = null sin sesión.
