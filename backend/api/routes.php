@@ -19,3 +19,9 @@ $router->get('/auth/me', [AuthController::class, 'me']); // Pública: devuelve u
 // Diagnóstico inicial
 $router->get('/diagnostic', [DiagnosticController::class, 'show'], true);
 $router->post('/diagnostic', [DiagnosticController::class, 'submit'], true);
+
+// Módulos y lecciones
+$router->get('/modules', [ModuleController::class, 'index'], true);
+$router->get('/modules/{slug}', [ModuleController::class, 'show'], true);
+$router->get('/lessons/{id}', [LessonController::class, 'show'], true);
+$router->post('/lessons/{id}/complete', [LessonController::class, 'complete'], true);

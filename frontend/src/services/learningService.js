@@ -20,3 +20,23 @@ export function submitDiagnostic(experienceOption, answers) {
     body: { experience_option: experienceOption, answers },
   });
 }
+
+/** Los tres módulos con el avance del estudiante. */
+export function getModules() {
+  return apiRequest('/modules');
+}
+
+/** Un módulo con sus lecciones (según la ruta) y su avance. */
+export function getModule(slug) {
+  return apiRequest(`/modules/${encodeURIComponent(slug)}`);
+}
+
+/** Contenido de una lección desbloqueada. */
+export function getLesson(id) {
+  return apiRequest(`/lessons/${encodeURIComponent(id)}`);
+}
+
+/** Marca la lección como leída y devuelve el nuevo avance del módulo. */
+export function completeLesson(id) {
+  return apiRequest(`/lessons/${encodeURIComponent(id)}/complete`, { method: 'POST' });
+}

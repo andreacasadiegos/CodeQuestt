@@ -54,6 +54,7 @@ codequest/
    1. `database/01_schema.sql` (crea `codequest_db` con 16 tablas; **borra la base si ya existía**).
    2. `database/02_seed_catalogos.sql` (rutas, niveles, módulos e insignias).
    3. `database/03_seed_diagnostico.sql` (prueba diagnóstica de 5 preguntas).
+   4. `database/04_seed_contenido.sql` (15 lecciones de los 3 módulos).
 4. Ejecuta `database/verificacion.sql`. Debe mostrar 16 tablas, 26 claves
    foráneas y 2 rutas, 5 niveles, 3 módulos y 8 insignias.
 5. Opcional: en `codequest_db` → **Más** → **Diseñador** puedes ver el
@@ -105,6 +106,22 @@ En phpMyAdmin verás el resultado en `diagnostics`, `attempts`, `attempt_answers
 y en `users.path_id`. El diagnóstico solo se puede hacer una vez: un segundo
 envío responde 409.
 
+## Probar módulos y lecciones (Etapa 6)
+
+Cada módulo tiene una lección común y dos propias de cada ruta (3 lecciones
+por módulo para cada estudiante):
+
+| Módulo | Común | Ruta básica | Ruta intermedia |
+| --- | --- | --- | --- |
+| Abstracción | ¿Qué es la abstracción? | Lo esencial y los detalles · Usar sin conocer todos los detalles | Modelar datos · Funciones |
+| Patrones | ¿Qué es un patrón? | Secuencias de números y figuras · Repetir sin repetirse | La regla del término n · Patrones con ciclos y condiciones |
+| Algoritmos | ¿Qué es un algoritmo? | Paso a paso: secuencias · Tomar decisiones | Variables, condiciones y ciclos · Encontrar el mayor |
+
+1. Entra con un estudiante de ruta básica y otro de ruta intermedia: cada uno ve sus propias lecciones.
+2. Las lecciones se desbloquean en orden; abrir una bloqueada por URL responde «Completa la lección anterior».
+3. Al pulsar «Entendido, continuar» se guarda en `lesson_progress` y el avance del módulo en `module_progress`.
+4. Cierra sesión y vuelve a entrar: el avance se conserva.
+
 ## Problemas frecuentes
 
 | Síntoma | Causa probable | Solución |
@@ -127,6 +144,6 @@ envío responde 409.
 | 3 | API base y autenticación | Completada |
 | 4 | Identidad visual, inicio y acceso | Completada |
 | 5 | Diagnóstico | Completada |
-| 6 | Módulos y lecciones | Pendiente |
+| 6 | Módulos y lecciones | Completada |
 | 7 | Actividades y calificación | Pendiente |
 | 8 | Gamificación, panel y cierre | Pendiente |

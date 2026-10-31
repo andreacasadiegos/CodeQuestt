@@ -47,6 +47,16 @@ final class User
         return $stmt->fetch() ?: null;
     }
 
+    /** Ruta actual del estudiante (null si no ha hecho el diagnóstico). */
+    public function pathId(int $id): ?int
+    {
+        $stmt = $this->db->prepare('SELECT path_id FROM users WHERE id = ?');
+        $stmt->execute([$id]);
+        $pathId = $stmt->fetchColumn();
+
+        return $pathId === null || $pathId === false ? null : (int) $pathId;
+    }
+
     /** Bloquea la fila del usuario hasta el final de la transacción actual. */
     public function lockForUpdate(int $id): void
     {

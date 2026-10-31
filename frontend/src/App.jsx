@@ -5,7 +5,9 @@ import { AuthProvider } from './context/AuthContext.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import DiagnosticPage from './pages/DiagnosticPage.jsx';
 import HomePage from './pages/HomePage.jsx';
+import LessonPage from './pages/LessonPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import ModulePage from './pages/ModulePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
@@ -13,7 +15,7 @@ import PublicOnlyRoute from './routes/PublicOnlyRoute.jsx';
 
 /**
  * Definición de rutas de la aplicación.
- * Los módulos y actividades se agregan en las siguientes etapas.
+ * Las actividades, insignias y el progreso detallado se agregan en las Etapas 7 y 8.
  */
 export default function App() {
   return (
@@ -34,6 +36,8 @@ export default function App() {
 
             <Route element={<ProtectedRoute requireDiagnostic />}>
               <Route path="/panel" element={<DashboardPage />} />
+              <Route path="/modulos/:slug" element={<ModulePage />} />
+              <Route path="/lecciones/:id" element={<LessonPage />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />
