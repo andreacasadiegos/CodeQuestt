@@ -4,6 +4,8 @@
  *
  * - Las lecciones se desbloquean en orden: la primera siempre está
  *   disponible y cada una se abre al leer la anterior (RF-17).
+ * - La práctica de una lección se abre al leer esa lección; la evaluación
+ *   (y en la Etapa 8 el reto) se abre al leer todas las lecciones del módulo.
  * - El avance de un módulo es el porcentaje de elementos completados:
  *   lecciones leídas + actividades aprobadas, sobre el total visible
  *   para la ruta del estudiante.
@@ -45,6 +47,43 @@ final class ProgressService
         }
 
         return $result;
+    }
+
+    /**
+     * Actividades del módulo con su estado para el estudiante.
+     *
+     * @return array<int, array> cada actividad con locked, passed, best_score y attempts
+     */
+    public function activitiesWithState(int $userId, int $moduleId, int $pathId): array
+    {
+        $lessons = $this->lessonsWithState($userId, $moduleId, $pathId);
+        $best = (new Attempt())->bestByActivity($userId);
+
+        return array_map(function (array $activity) use ($lessons, $best) {
+            $result = $best[$activity['id']] ?? ['best_score' => null, 'passed' => false, 'attempts' => 0];
+            return $activity + $result + ['locked' => !$this->isUnlocked($activity, $lessons)];
+        }, (new Activity())->forModule($moduleId, $pathId));
+    }
+
+    /** Una actividad está disponible según las lecciones leídas del módulo. */
+    public function isUnlocked(array $activity, array $lessonsWithState): bool
+    {
+        if ($activity['kind'] === 'practica') {
+            foreach ($lessonsWithState as $lesson) {
+                if ($lesson['id'] === $activity['lesson_id']) {
+                    return $lesson['completed'];
+                }
+            }
+            return false;
+        }
+
+        // Evaluaciones y retos: todas las lecciones del módulo leídas.
+        foreach ($lessonsWithState as $lesson) {
+            if (!$lesson['completed']) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

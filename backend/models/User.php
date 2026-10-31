@@ -64,6 +64,20 @@ final class User
         $stmt->execute([$id]);
     }
 
+    /** Suma XP y actualiza el nivel. Solo lo llama XpService. */
+    public function addXp(int $id, int $amount, int $levelId): void
+    {
+        $stmt = $this->db->prepare('UPDATE users SET xp_total = xp_total + ?, level_id = ? WHERE id = ?');
+        $stmt->execute([$amount, $levelId, $id]);
+    }
+
+    public function xpTotal(int $id): int
+    {
+        $stmt = $this->db->prepare('SELECT xp_total FROM users WHERE id = ?');
+        $stmt->execute([$id]);
+        return (int) $stmt->fetchColumn();
+    }
+
     public function assignPath(int $id, int $pathId): void
     {
         $stmt = $this->db->prepare('UPDATE users SET path_id = ? WHERE id = ?');

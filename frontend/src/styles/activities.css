@@ -1,0 +1,211 @@
+/* =====================================================================
+ * Actividades: tipos de pregunta, resultado y experiencia (XP).
+ * ===================================================================== */
+
+/* ---------- Encabezado de la actividad ---------- */
+.cq-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: var(--cq-surface-2);
+  border: var(--cq-border);
+  color: var(--cq-text-muted);
+}
+
+.cq-chip-xp { color: var(--cq-xp); }
+.cq-star { color: var(--cq-xp); font-size: 0.8rem; }
+.cq-star.bi-star { color: var(--cq-text-dim); }
+.cq-xp-text { color: var(--cq-xp); }
+
+.cq-kind {
+  display: inline-block;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: var(--cq-accent-soft);
+  color: var(--cq-accent);
+}
+
+.cq-kind-evaluacion { background: rgba(59, 130, 246, 0.16); color: #93c5fd; }
+.cq-kind-reto { background: rgba(250, 204, 21, 0.14); color: var(--cq-xp); }
+
+/* ---------- Identificar patrones ---------- */
+.cq-sequence {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-bottom: 1.25rem;
+}
+
+.cq-tile {
+  display: inline-grid;
+  place-items: center;
+  min-width: 56px;
+  height: 56px;
+  padding: 0 0.75rem;
+  border-radius: var(--cq-radius-sm);
+  background: var(--cq-surface-2);
+  border: var(--cq-border);
+  font-family: var(--cq-font-code);
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.cq-tile.is-blank {
+  border: 2px dashed var(--cq-accent);
+  background: var(--cq-accent-soft);
+  color: var(--cq-accent);
+  animation: cq-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes cq-pulse {
+  50% { box-shadow: 0 0 0 6px rgba(167, 139, 250, 0.12); }
+}
+
+/* ---------- Completar código ---------- */
+.cq-code-fill { margin-bottom: 0.75rem; }
+
+.cq-blank-input {
+  min-width: 6ch;
+  max-width: 100%;
+  margin: 0 0.15rem;
+  padding: 0.05rem 0.4rem;
+  border: none;
+  border-bottom: 2px solid var(--cq-accent);
+  border-radius: 6px 6px 0 0;
+  background: var(--cq-accent-soft);
+  color: var(--cq-text);
+  font: inherit;
+  outline: none;
+}
+
+.cq-blank-input:focus {
+  background: rgba(167, 139, 250, 0.26);
+  box-shadow: 0 2px 0 var(--cq-cyan);
+}
+
+.cq-inline-code {
+  padding: 0.1rem 0.4rem;
+  border-radius: 6px;
+  background: var(--cq-surface-3);
+  color: var(--cq-cyan);
+  font-family: var(--cq-font-code);
+}
+
+/* ---------- Ordenar pasos ---------- */
+.cq-order-list {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.cq-order-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--cq-radius-sm);
+  background: var(--cq-surface-2);
+  border: var(--cq-border);
+  cursor: grab;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.cq-order-item:hover { border-color: var(--cq-accent); }
+.cq-order-item.is-dragging { opacity: 0.45; cursor: grabbing; }
+
+.cq-icon-button {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 9px;
+  background: var(--cq-surface-3);
+  color: var(--cq-text);
+  border: none;
+}
+
+.cq-icon-button:hover:not(:disabled) { background: var(--cq-primary); color: #fff; }
+.cq-icon-button:disabled { opacity: 0.3; }
+
+/* ---------- Relacionar conceptos ---------- */
+.cq-match-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--cq-radius-sm);
+  background: var(--cq-surface-2);
+  border: var(--cq-border);
+}
+
+@media (min-width: 768px) {
+  .cq-match-row {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.4fr);
+    align-items: center;
+  }
+}
+
+.cq-match-concept {
+  font-weight: 600;
+  margin: 0;
+}
+
+.cq-select {
+  background-color: var(--cq-bg);
+  border: var(--cq-border);
+  border-radius: 10px;
+  color: var(--cq-text-muted);
+}
+
+.cq-select:focus {
+  background-color: var(--cq-bg);
+  border-color: var(--cq-accent);
+  box-shadow: 0 0 0 3px var(--cq-accent-soft);
+  color: var(--cq-text);
+}
+
+.cq-select.is-filled { color: var(--cq-text); border-color: var(--cq-accent); }
+.cq-select option { background: var(--cq-surface); color: var(--cq-text); }
+
+/* ---------- Resultado ---------- */
+.cq-review-list {
+  margin-top: 0.25rem;
+  padding-left: 1.25rem;
+}
+
+.cq-xp-card {
+  padding: 1.25rem;
+  border-radius: var(--cq-radius);
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.22), rgba(59, 130, 246, 0.14));
+  border: var(--cq-border);
+}
+
+.cq-xp-badge {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: rgba(250, 204, 21, 0.16);
+  color: var(--cq-xp);
+  font-size: 1.6rem;
+}
+
+.cq-level-up {
+  margin-bottom: 1rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: var(--cq-radius-sm);
+  background: rgba(250, 204, 21, 0.14);
+  color: var(--cq-xp);
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cq-tile.is-blank { animation: none; }
+}

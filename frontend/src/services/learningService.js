@@ -40,3 +40,16 @@ export function getLesson(id) {
 export function completeLesson(id) {
   return apiRequest(`/lessons/${encodeURIComponent(id)}/complete`, { method: 'POST' });
 }
+
+/** Preguntas de una actividad (sin respuestas correctas). */
+export function getActivity(id) {
+  return apiRequest(`/activities/${encodeURIComponent(id)}`);
+}
+
+/**
+ * Envía las respuestas de una actividad. El servidor califica y otorga XP.
+ * @param {Array<{question_id: number, answer: object}>} answers
+ */
+export function submitActivity(id, answers) {
+  return apiRequest(`/activities/${encodeURIComponent(id)}/submit`, { method: 'POST', body: { answers } });
+}

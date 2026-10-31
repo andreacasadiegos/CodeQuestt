@@ -10,7 +10,7 @@ import ProgressBar from '../components/ui/ProgressBar.jsx';
 import { useApi } from '../hooks/useApi.js';
 import { completeLesson, getLesson } from '../services/learningService.js';
 
-/** Página de una lección: explicación, ejemplo y botón para continuar. */
+/** Página de una lección: explicación, ejemplo y botón para ir a su práctica. */
 export default function LessonPage() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -28,7 +28,9 @@ export default function LessonPage() {
     setSaveError('');
     try {
       const result = await completeLesson(lesson.id);
-      navigate(result.next_lesson_id ? `/lecciones/${result.next_lesson_id}` : `/modulos/${module.slug}`);
+      // Después de leer, se practica; si la lección no tiene práctica, se sigue.
+      if (result.practice_activity_id) navigate(`/actividades/${result.practice_activity_id}`);
+      else navigate(result.next_lesson_id ? `/lecciones/${result.next_lesson_id}` : `/modulos/${module.slug}`);
       window.scrollTo({ top: 0 });
     } catch (err) {
       setSaveError(err.message);
@@ -85,7 +87,7 @@ export default function LessonPage() {
             <button type="button" className="btn btn-cq btn-cq-primary" onClick={handleComplete} disabled={saving}>
               {saving ? 'Guardando…' : (
                 <>
-                  {lesson.completed ? 'Continuar' : 'Entendido, continuar'}
+                  {lesson.completed ? 'Continuar' : 'Entendido, a practicar'}
                   <i className="bi bi-arrow-right" aria-hidden="true" />
                 </>
               )}

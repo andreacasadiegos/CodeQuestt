@@ -55,6 +55,7 @@ codequest/
    2. `database/02_seed_catalogos.sql` (rutas, niveles, módulos e insignias).
    3. `database/03_seed_diagnostico.sql` (prueba diagnóstica de 5 preguntas).
    4. `database/04_seed_contenido.sql` (15 lecciones de los 3 módulos).
+   5. `database/05_seed_actividades.sql` (15 prácticas y 6 evaluaciones con 54 preguntas).
 4. Ejecuta `database/verificacion.sql`. Debe mostrar 16 tablas, 26 claves
    foráneas y 2 rutas, 5 niveles, 3 módulos y 8 insignias.
 5. Opcional: en `codequest_db` → **Más** → **Diseñador** puedes ver el
@@ -122,6 +123,32 @@ por módulo para cada estudiante):
 3. Al pulsar «Entendido, continuar» se guarda en `lesson_progress` y el avance del módulo en `module_progress`.
 4. Cierra sesión y vuelve a entrar: el avance se conserva.
 
+## Probar actividades y calificación (Etapa 7)
+
+Cada lección tiene una práctica de 2 preguntas y cada módulo una evaluación
+de 4 preguntas por ruta. Hay cinco tipos de pregunta: selección múltiple,
+identificar patrones, completar código, ordenar pasos y relacionar conceptos.
+
+| Actividad | Dificultad | XP máximo | Se aprueba con |
+| --- | --- | --- | --- |
+| Práctica de la lección 1, 2 y 3 | 1, 2 y 3 estrellas | 10, 20 y 30 | 60 % |
+| Evaluación del módulo | 3 estrellas | 40 | 60 % |
+
+1. En una lección pulsa «Entendido, a practicar»: abre su práctica.
+2. Responde y envía. El resultado muestra el puntaje, el XP ganado, el nivel y la explicación de cada pregunta.
+3. XP = XP máximo × porcentaje de aciertos. Al reintentar solo se suma la mejora: repetir con el mismo puntaje da 0 XP.
+4. La evaluación del módulo se desbloquea al leer todas sus lecciones.
+5. En phpMyAdmin revisa `attempts`, `attempt_answers`, `xp_transactions` y `users.xp_total` / `users.level_id`.
+
+Seguridad que se puede comprobar en Thunder Client:
+
+| Prueba | Resultado esperado |
+| --- | --- |
+| `GET /activities/2` | Las preguntas llegan sin `is_correct` ni orden o parejas correctas |
+| `POST /activities/2/submit` con `{"answers":[], "xp": 999}` | 422; el XP nunca se acepta del navegador |
+| Abrir la práctica de una lección no leída | 403, «Lee primero la lección de esta práctica.» |
+| Abrir una evaluación de la otra ruta | 404 |
+
 ## Problemas frecuentes
 
 | Síntoma | Causa probable | Solución |
@@ -145,5 +172,5 @@ por módulo para cada estudiante):
 | 4 | Identidad visual, inicio y acceso | Completada |
 | 5 | Diagnóstico | Completada |
 | 6 | Módulos y lecciones | Completada |
-| 7 | Actividades y calificación | Pendiente |
+| 7 | Actividades y calificación | Completada |
 | 8 | Gamificación, panel y cierre | Pendiente |

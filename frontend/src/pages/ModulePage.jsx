@@ -1,12 +1,13 @@
 import { Link, useParams } from 'react-router-dom';
 
+import Difficulty from '../components/ui/Difficulty.jsx';
 import ErrorState from '../components/ui/ErrorState.jsx';
 import LoadingScreen from '../components/ui/LoadingScreen.jsx';
 import ProgressBar from '../components/ui/ProgressBar.jsx';
 import { useApi } from '../hooks/useApi.js';
 import { getModule } from '../services/learningService.js';
 
-/** Página de un módulo: descripción, avance y lecciones en orden. */
+/** Página de un módulo: descripción, avance, lecciones en orden y actividades. */
 export default function ModulePage() {
   const { slug } = useParams();
   const { data, loading, error, reload } = useApi(() => getModule(slug), [slug]);
@@ -14,7 +15,7 @@ export default function ModulePage() {
   if (loading) return <LoadingScreen message="Abriendo el módulo…" />;
   if (error) return <ErrorState error={error} onRetry={reload} />;
 
-  const { module, progress, lessons } = data;
+  const { module, progress, lessons, activities } = data;
   const nextLesson = lessons.find((lesson) => !lesson.completed && !lesson.locked);
 
   return (
@@ -77,6 +78,48 @@ export default function ModulePage() {
           );
         })}
       </ol>
+
+      <h2 className="h5 fw-bold mt-5 mb-3">Actividades</h2>
+      <div className="row g-3">
+        {activities.map((activity) => (
+          <div key={activity.id} className="col-md-6">
+            <ActivityRow activity={activity} />
+          </div>
+        ))}
+      </div>
     </section>
+  );
+}
+
+const KIND_LABELS = { practica: 'Práctica', evaluacion: 'Evaluación', reto: 'Reto' };
+
+function ActivityRow({ activity }) {
+  const state = activity.passed ? 'done' : activity.locked ? 'locked' : 'open';
+  const icon = activity.passed ? 'bi-check-lg' : activity.locked ? 'bi-lock-fill' : 'bi-pencil-square';
+  const status = activity.locked
+    ? (activity.kind === 'practica' ? 'Lee su lección' : 'Lee todas las lecciones')
+    : activity.attempts > 0
+      ? `Mejor: ${activity.best_score}%`
+      : 'Sin intentos';
+
+  const content = (
+    <>
+      <span className={`cq-lesson-dot is-${state}`}><i className={`bi ${icon}`} aria-hidden="true" /></span>
+      <span className="flex-grow-1">
+        <span className={`cq-kind cq-kind-${activity.kind}`}>{KIND_LABELS[activity.kind]}</span>
+        <span className="fw-semibold d-block mt-1">{activity.title}</span>
+        <span className="cq-muted small d-flex flex-wrap gap-2 mt-1">
+          <Difficulty value={activity.difficulty} />
+          <span><i className="bi bi-lightning-charge-fill cq-xp-text" aria-hidden="true" /> {activity.base_xp} XP</span>
+          <span>{status}</span>
+        </span>
+      </span>
+    </>
+  );
+
+  return activity.locked ? (
+    <div className="cq-lesson-row is-locked h-100" aria-disabled="true">{content}</div>
+  ) : (
+    <Link to={`/actividades/${activity.id}`} className="cq-lesson-row text-reset h-100">{content}</Link>
   );
 }

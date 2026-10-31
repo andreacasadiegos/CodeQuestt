@@ -25,3 +25,7 @@ $router->get('/modules', [ModuleController::class, 'index'], true);
 $router->get('/modules/{slug}', [ModuleController::class, 'show'], true);
 $router->get('/lessons/{id}', [LessonController::class, 'show'], true);
 $router->post('/lessons/{id}/complete', [LessonController::class, 'complete'], true);
+
+// Actividades
+$router->get('/activities/{id}', [ActivityController::class, 'show'], true);
+$router->post('/activities/{id}/submit', [ActivityController::class, 'submit'], true);

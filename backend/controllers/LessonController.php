@@ -23,6 +23,7 @@ final class LessonController
 
         Response::json([
             'lesson' => $lesson + ['completed' => $siblings[$position]['completed']],
+            'practice_activity_id' => (new Activity())->practiceForLesson($lesson['id']),
             'module' => ['slug' => $module['slug'], 'name' => $module['name'], 'icon' => $module['icon']],
             'position' => $position + 1,
             'total'    => count($siblings),
@@ -41,9 +42,10 @@ final class LessonController
         $summary = (new ProgressService())->refreshModule($userId, $lesson['module_id'], $pathId);
 
         Response::json([
-            'completed'      => true,
-            'progress'       => $summary,
-            'next_lesson_id' => $siblings[$position + 1]['id'] ?? null,
+            'completed'            => true,
+            'progress'             => $summary,
+            'next_lesson_id'       => $siblings[$position + 1]['id'] ?? null,
+            'practice_activity_id' => (new Activity())->practiceForLesson($lesson['id']),
         ]);
     }
 

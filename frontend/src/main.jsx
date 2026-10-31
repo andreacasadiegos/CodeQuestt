@@ -9,6 +9,7 @@ import './styles/animations.css';
 import './styles/layout.css';
 import './styles/home.css';
 import './styles/learning.css';
+import './styles/activities.css';
 
 import App from './App.jsx';
 

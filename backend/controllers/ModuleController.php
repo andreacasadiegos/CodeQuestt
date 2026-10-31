@@ -3,7 +3,7 @@
  * Módulos de aprendizaje.
  *
  * GET /api/modules          (privada) Los 3 módulos con el avance del estudiante.
- * GET /api/modules/{slug}   (privada) Un módulo con sus lecciones según la ruta.
+ * GET /api/modules/{slug}   (privada) Un módulo con sus lecciones y actividades según la ruta.
  */
 
 declare(strict_types=1);
@@ -39,7 +39,8 @@ final class ModuleController
         Response::json([
             'module'   => $module,
             'progress' => $service->moduleSummary($userId, $module['id'], $pathId),
-            'lessons'  => $service->lessonsWithState($userId, $module['id'], $pathId),
+            'lessons'    => $service->lessonsWithState($userId, $module['id'], $pathId),
+            'activities' => $service->activitiesWithState($userId, $module['id'], $pathId),
         ]);
     }
 }
