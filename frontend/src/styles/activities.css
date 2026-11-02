@@ -12,6 +12,7 @@
   background: var(--cq-surface-2);
   border: var(--cq-border);
   color: var(--cq-text-muted);
+  white-space: nowrap;
 }
 
 .cq-chip-xp { color: var(--cq-xp); }

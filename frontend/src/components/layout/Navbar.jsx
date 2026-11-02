@@ -37,20 +37,31 @@ export default function Navbar() {
         </button>
 
         <div id="cq-nav-menu" className={`cq-nav-menu ${open ? 'is-open' : ''}`}>
-          <a href="/#como-funciona" onClick={close} className="cq-nav-link">Cómo funciona</a>
-          <a href="/#modulos" onClick={close} className="cq-nav-link">Módulos</a>
-          <a href="/#beneficios" onClick={close} className="cq-nav-link">Beneficios</a>
+          {user && !user.needs_diagnostic ? (
+            <>
+              <NavLink to="/panel" onClick={close} className="cq-nav-link">Panel</NavLink>
+              <NavLink to="/progreso" onClick={close} className="cq-nav-link">Progreso</NavLink>
+              <NavLink to="/insignias" onClick={close} className="cq-nav-link">Insignias</NavLink>
+            </>
+          ) : (
+            <>
+              <a href="/#como-funciona" onClick={close} className="cq-nav-link">Cómo funciona</a>
+              <a href="/#modulos" onClick={close} className="cq-nav-link">Módulos</a>
+              <a href="/#beneficios" onClick={close} className="cq-nav-link">Beneficios</a>
+            </>
+          )}
 
           {user ? (
             <>
-              <NavLink
+              <Link
                 to={user.needs_diagnostic ? '/diagnostico' : '/panel'}
                 onClick={close}
                 className="btn btn-cq btn-cq-outline"
               >
                 <i className="bi bi-person-circle" aria-hidden="true" />
                 {user.full_name.split(' ')[0]}
-              </NavLink>
+                {!user.needs_diagnostic && <span className="cq-nav-xp">{user.xp_total} XP</span>}
+              </Link>
               <button type="button" onClick={handleLogout} className="btn btn-cq btn-cq-outline">
                 <i className="bi bi-box-arrow-right" aria-hidden="true" />
                 Salir

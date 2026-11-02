@@ -8,6 +8,7 @@
 -- =====================================================================
 
 USE codequest_db;
+SET NAMES utf8mb4;
 
 -- Rutas de aprendizaje.
 -- Desde la ruta básica se puede avanzar a la intermedia con un promedio

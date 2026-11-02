@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import MainLayout from './components/layout/MainLayout.jsx';
 import { AuthProvider } from './context/AuthContext.jsx';
 import ActivityPage from './pages/ActivityPage.jsx';
+import BadgesPage from './pages/BadgesPage.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import DiagnosticPage from './pages/DiagnosticPage.jsx';
 import HomePage from './pages/HomePage.jsx';
@@ -10,13 +11,13 @@ import LessonPage from './pages/LessonPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import ModulePage from './pages/ModulePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
+import ProgressPage from './pages/ProgressPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import PublicOnlyRoute from './routes/PublicOnlyRoute.jsx';
 
 /**
  * Definición de rutas de la aplicación.
- * Las insignias y el progreso detallado se agregan en la Etapa 8.
  */
 export default function App() {
   return (
@@ -40,6 +41,8 @@ export default function App() {
               <Route path="/modulos/:slug" element={<ModulePage />} />
               <Route path="/lecciones/:id" element={<LessonPage />} />
               <Route path="/actividades/:id" element={<ActivityPage />} />
+              <Route path="/insignias" element={<BadgesPage />} />
+              <Route path="/progreso" element={<ProgressPage />} />
             </Route>
 
             <Route path="*" element={<NotFoundPage />} />

@@ -6,6 +6,7 @@
 -- =====================================================================
 
 USE codequest_db;
+SET NAMES utf8mb4;
 
 -- 1. Deben aparecer 16 tablas.
 SELECT COUNT(*) AS total_tablas

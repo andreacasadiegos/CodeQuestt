@@ -60,4 +60,18 @@ final class XpService
             'level_up'   => $level['number'] > $previousLevel['number'],
         ];
     }
+
+    /**
+     * XP total, nivel actual y siguiente nivel del estudiante.
+     *
+     * @return array{xp_total: int, level: array, next_level: ?array}
+     */
+    public function state(int $userId): array
+    {
+        $levels = new Level();
+        $total = (new User())->xpTotal($userId);
+        $level = $levels->forXp($total);
+
+        return ['xp_total' => $total, 'level' => $level, 'next_level' => $levels->next($level['number'])];
+    }
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/useAuth.js';
 import { submitActivity } from '../../services/learningService.js';
+import BadgeUnlocked from '../gamification/BadgeUnlocked.jsx';
 import XpGain from '../gamification/XpGain.jsx';
 import Alert from '../ui/Alert.jsx';
 import ProgressBar from '../ui/ProgressBar.jsx';
@@ -75,6 +76,7 @@ export default function ActivityRunner({ activity, module, questions, onRetry })
         </div>
 
         <XpGain xp={result.xp} />
+        {result.badges.length > 0 && <BadgeUnlocked badges={result.badges} />}
 
         <h2 className="h5 fw-bold mt-4 mb-2">Revisa tus respuestas</h2>
         {questions.map((q, i) => (

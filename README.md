@@ -20,7 +20,8 @@ Node.js se usa solo como herramienta de desarrollo del frontend.
 
 ```text
 codequest/
-├── database/   Scripts SQL (Etapa 2)
+├── database/   Scripts SQL: esquema, datos iniciales y métricas
+├── docs/       Guion de demostración
 ├── backend/    API REST en PHP
 │   └── api/    Punto de entrada: index.php + .htaccess
 └── frontend/   Aplicación React (Vite)
@@ -56,6 +57,7 @@ codequest/
    3. `database/03_seed_diagnostico.sql` (prueba diagnóstica de 5 preguntas).
    4. `database/04_seed_contenido.sql` (15 lecciones de los 3 módulos).
    5. `database/05_seed_actividades.sql` (15 prácticas y 6 evaluaciones con 54 preguntas).
+   6. `database/06_seed_retos.sql` (6 retos de módulo con 30 preguntas).
 4. Ejecuta `database/verificacion.sql`. Debe mostrar 16 tablas, 26 claves
    foráneas y 2 rutas, 5 niveles, 3 módulos y 8 insignias.
 5. Opcional: en `codequest_db` → **Más** → **Diseñador** puedes ver el
@@ -149,6 +151,48 @@ Seguridad que se puede comprobar en Thunder Client:
 | Abrir la práctica de una lección no leída | 403, «Lee primero la lección de esta práctica.» |
 | Abrir una evaluación de la otra ruta | 404 |
 
+## Probar gamificación, panel y avance de ruta (Etapa 8)
+
+**Retos.** Cada módulo tiene un reto de 5 preguntas que mezcla los tipos de
+pregunta (60 XP, se aprueba con 70 %). Se desbloquea al aprobar la evaluación
+del módulo.
+
+**Insignias.** Se otorgan solas, en el servidor, justo después de calificar:
+
+| Insignia | Meta | Premio |
+| --- | --- | --- |
+| Primer paso | Aprobar 1 actividad | 10 XP |
+| Constancia | Aprobar 10 actividades | 30 XP |
+| Sin errores | Sacar 100 % en una actividad | 20 XP |
+| Retador | Superar un reto | 25 XP |
+| Maestro de… (×3) | Completar el módulo al 100 % | 40 XP |
+| Leyenda en ascenso | Llegar a 500 XP | — |
+
+**Avance de ruta (RF-31).** Un estudiante de ruta básica que aprueba las 3
+evaluaciones con un promedio de 80 % o más ve en el panel el botón «Avanzar a
+la ruta intermedia». El servidor vuelve a comprobar la regla; conserva XP,
+insignias e intentos, y en `diagnostics` queda la ruta inicial.
+
+Páginas nuevas: **Panel** (nivel, XP, actividades, insignias, retos y
+avance de ruta), **Progreso** (mejor resultado e intentos por actividad,
+historial de intentos y de XP) e **Insignias**.
+
+| Petición (Thunder Client) | Resultado esperado |
+| --- | --- |
+| `GET /dashboard` | Resumen del panel |
+| `GET /badges` | 8 insignias con `earned`, `current` y `target` |
+| `GET /progress` | Módulos, actividades, intentos y movimientos de XP |
+| `POST /path/advance` sin cumplir la regla | 409, «Aún no cumples la regla para avanzar de ruta.» |
+| `GET /activities/{reto}` sin aprobar la evaluación | 403, «Aprueba la evaluación del módulo para desbloquear el reto.» |
+
+## Métricas y demostración
+
+- `database/07_consultas_metricas.sql`: consultas de solo lectura con
+  estudiantes registrados, rutas, avances de ruta, niveles, ranking de XP,
+  avance por módulo, actividades y preguntas más difíciles, retos e
+  insignias, y una comprobación de integridad del XP.
+- `docs/guion-demostracion.md`: guion paso a paso para presentar el proyecto.
+
 ## Problemas frecuentes
 
 | Síntoma | Causa probable | Solución |
@@ -159,6 +203,7 @@ Seguridad que se puede comprobar en Thunder Client:
 | MySQL no arranca en XAMPP | Puerto 3306 ocupado por otro MySQL instalado | Detén el otro servicio de MySQL en Servicios de Windows |
 | La API responde 500 «Falta backend/config/config.php» | No se creó el archivo de configuración | Copia `config.example.php` como `config.php` |
 | `#1046 No database selected` | Se ejecutó el seed sin el schema | Ejecuta primero `01_schema.sql` |
+| Aparecen tildes rotas (`Ã³`) | Los scripts se ejecutaron con otra codificación | Vuelve a ejecutarlos: cada uno empieza con `SET NAMES utf8mb4` |
 | `npm` no se reconoce | Node.js no instalado o terminal abierta antes de instalarlo | Instala Node.js LTS y abre una terminal nueva |
 
 ## Etapas
@@ -173,4 +218,4 @@ Seguridad que se puede comprobar en Thunder Client:
 | 5 | Diagnóstico | Completada |
 | 6 | Módulos y lecciones | Completada |
 | 7 | Actividades y calificación | Completada |
-| 8 | Gamificación, panel y cierre | Pendiente |
+| 8 | Gamificación, panel y cierre | Completada |

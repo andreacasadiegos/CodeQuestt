@@ -29,3 +29,9 @@ $router->post('/lessons/{id}/complete', [LessonController::class, 'complete'], t
 // Actividades
 $router->get('/activities/{id}', [ActivityController::class, 'show'], true);
 $router->post('/activities/{id}/submit', [ActivityController::class, 'submit'], true);
+
+// Gamificación y seguimiento
+$router->get('/dashboard', [DashboardController::class, 'show'], true);
+$router->get('/badges', [BadgeController::class, 'index'], true);
+$router->get('/progress', [ProgressController::class, 'show'], true);
+$router->post('/path/advance', [PathController::class, 'advance'], true);

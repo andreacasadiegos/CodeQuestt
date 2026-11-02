@@ -71,4 +71,12 @@ final class Progress
         );
         $stmt->execute([$userId, $moduleId, $percent, $status, $status, $status]);
     }
+
+    /** @return array<int, true> ids de módulos que el estudiante completó al 100 % */
+    public function completedModuleIds(int $userId): array
+    {
+        $stmt = $this->db->prepare("SELECT module_id FROM module_progress WHERE user_id = ? AND status = 'completado'");
+        $stmt->execute([$userId]);
+        return array_fill_keys(array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN)), true);
+    }
 }

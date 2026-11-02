@@ -67,4 +67,61 @@ final class Attempt
         }
         return $result;
     }
+
+    /**
+     * Totales del estudiante en actividades de módulo (sin el diagnóstico).
+     *
+     * @return array{completed: int, perfect: int, retos: int}
+     */
+    public function stats(int $userId): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT COUNT(DISTINCT IF(t.passed = 1, t.activity_id, NULL)) AS completed,
+                    COUNT(DISTINCT IF(t.score_pct = 100, t.activity_id, NULL)) AS perfect,
+                    COUNT(DISTINCT IF(t.passed = 1 AND a.kind = 'reto', t.activity_id, NULL)) AS retos
+             FROM attempts t
+             JOIN activities a ON a.id = t.activity_id
+             WHERE t.user_id = ? AND a.kind <> 'diagnostico'"
+        );
+        $stmt->execute([$userId]);
+        $row = $stmt->fetch();
+
+        return [
+            'completed' => (int) $row['completed'],
+            'perfect'   => (int) $row['perfect'],
+            'retos'     => (int) $row['retos'],
+        ];
+    }
+
+    /** Últimos intentos del estudiante, con el nombre de la actividad (RF-28). */
+    public function history(int $userId, int $limit = 20): array
+    {
+        $stmt = $this->db->prepare(
+            "SELECT t.id, t.activity_id, a.title, a.kind, m.name AS module_name,
+                    t.correct_count, t.total_count, t.score_pct, t.passed, t.xp_awarded, t.submitted_at
+             FROM attempts t
+             JOIN activities a ON a.id = t.activity_id
+             LEFT JOIN modules m ON m.id = a.module_id
+             WHERE t.user_id = ? AND a.kind <> 'diagnostico'
+             ORDER BY t.id DESC
+             LIMIT ?"
+        );
+        $stmt->bindValue(1, $userId, PDO::PARAM_INT);
+        $stmt->bindValue(2, $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return array_map(fn (array $row) => [
+            'id'          => (int) $row['id'],
+            'activity_id' => (int) $row['activity_id'],
+            'title'       => $row['title'],
+            'kind'        => $row['kind'],
+            'module_name' => $row['module_name'],
+            'correct'     => (int) $row['correct_count'],
+            'total'       => (int) $row['total_count'],
+            'score_pct'   => (int) $row['score_pct'],
+            'passed'      => (bool) $row['passed'],
+            'xp_awarded'  => (int) $row['xp_awarded'],
+            'submitted_at' => $row['submitted_at'],
+        ], $stmt->fetchAll());
+    }
 }

@@ -5,7 +5,8 @@
  * - Las lecciones se desbloquean en orden: la primera siempre está
  *   disponible y cada una se abre al leer la anterior (RF-17).
  * - La práctica de una lección se abre al leer esa lección; la evaluación
- *   (y en la Etapa 8 el reto) se abre al leer todas las lecciones del módulo.
+ *   se abre al leer todas las lecciones del módulo, y el reto al aprobar
+ *   la evaluación.
  * - El avance de un módulo es el porcentaje de elementos completados:
  *   lecciones leídas + actividades aprobadas, sobre el total visible
  *   para la ruta del estudiante.
@@ -58,16 +59,41 @@ final class ProgressService
     {
         $lessons = $this->lessonsWithState($userId, $moduleId, $pathId);
         $best = (new Attempt())->bestByActivity($userId);
+        $activities = (new Activity())->forModule($moduleId, $pathId);
+        $evaluationPassed = $this->evaluationPassedIn($activities, $best);
 
-        return array_map(function (array $activity) use ($lessons, $best) {
+        return array_map(function (array $activity) use ($lessons, $best, $evaluationPassed) {
             $result = $best[$activity['id']] ?? ['best_score' => null, 'passed' => false, 'attempts' => 0];
-            return $activity + $result + ['locked' => !$this->isUnlocked($activity, $lessons)];
-        }, (new Activity())->forModule($moduleId, $pathId));
+            return $activity + $result + ['locked' => !$this->isUnlocked($activity, $lessons, $evaluationPassed)];
+        }, $activities);
     }
 
-    /** Una actividad está disponible según las lecciones leídas del módulo. */
-    public function isUnlocked(array $activity, array $lessonsWithState): bool
+    /** ¿El estudiante aprobó la evaluación del módulo en su ruta? */
+    public function evaluationPassed(int $userId, int $moduleId, int $pathId): bool
     {
+        return $this->evaluationPassedIn(
+            (new Activity())->forModule($moduleId, $pathId),
+            (new Attempt())->bestByActivity($userId)
+        );
+    }
+
+    private function evaluationPassedIn(array $activities, array $best): bool
+    {
+        foreach ($activities as $activity) {
+            if ($activity['kind'] === 'evaluacion' && ($best[$activity['id']]['passed'] ?? false)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Una actividad está disponible según las lecciones leídas y, para el reto, la evaluación. */
+    public function isUnlocked(array $activity, array $lessonsWithState, bool $evaluationPassed = false): bool
+    {
+        if ($activity['kind'] === 'reto' && !$evaluationPassed) {
+            return false;
+        }
+
         if ($activity['kind'] === 'practica') {
             foreach ($lessonsWithState as $lesson) {
                 if ($lesson['id'] === $activity['lesson_id']) {
@@ -77,7 +103,7 @@ final class ProgressService
             return false;
         }
 
-        // Evaluaciones y retos: todas las lecciones del módulo leídas.
+        // Evaluación (y reto): todas las lecciones del módulo leídas.
         foreach ($lessonsWithState as $lesson) {
             if (!$lesson['completed']) {
                 return false;

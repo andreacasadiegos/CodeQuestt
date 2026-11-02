@@ -95,9 +95,10 @@ const KIND_LABELS = { practica: 'Práctica', evaluacion: 'Evaluación', reto: 'R
 
 function ActivityRow({ activity }) {
   const state = activity.passed ? 'done' : activity.locked ? 'locked' : 'open';
-  const icon = activity.passed ? 'bi-check-lg' : activity.locked ? 'bi-lock-fill' : 'bi-pencil-square';
+  const openIcon = activity.kind === 'reto' ? 'bi-controller' : 'bi-pencil-square';
+  const icon = activity.passed ? 'bi-check-lg' : activity.locked ? 'bi-lock-fill' : openIcon;
   const status = activity.locked
-    ? (activity.kind === 'practica' ? 'Lee su lección' : 'Lee todas las lecciones')
+    ? { practica: 'Lee su lección', evaluacion: 'Lee todas las lecciones', reto: 'Aprueba la evaluación' }[activity.kind]
     : activity.attempts > 0
       ? `Mejor: ${activity.best_score}%`
       : 'Sin intentos';

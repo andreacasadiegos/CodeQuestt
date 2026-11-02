@@ -17,6 +17,7 @@
 -- =====================================================================
 
 USE codequest_db;
+SET NAMES utf8mb4;
 
 -- Práctica: ¿qué es la abstracción?
 INSERT INTO activities (id, module_id, lesson_id, path_id, title, kind, difficulty, base_xp, pass_pct, sort_order) VALUES

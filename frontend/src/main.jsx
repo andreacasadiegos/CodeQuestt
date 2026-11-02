@@ -10,6 +10,7 @@ import './styles/layout.css';
 import './styles/home.css';
 import './styles/learning.css';
 import './styles/activities.css';
+import './styles/gamification.css';
 
 import App from './App.jsx';
 

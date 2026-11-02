@@ -8,6 +8,7 @@
 -- =====================================================================
 
 USE codequest_db;
+SET NAMES utf8mb4;
 
 INSERT INTO activities (id, module_id, lesson_id, path_id, title, description, kind, difficulty, base_xp, pass_pct, sort_order) VALUES
   (1, NULL, NULL, NULL, 'Prueba diagnóstica',

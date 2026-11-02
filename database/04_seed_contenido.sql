@@ -11,6 +11,7 @@
 -- =====================================================================
 
 USE codequest_db;
+SET NAMES utf8mb4;
 
 INSERT INTO lessons (id, module_id, path_id, title, content, example, sort_order) VALUES
   (1, 1, NULL, '¿Qué es la abstracción?',

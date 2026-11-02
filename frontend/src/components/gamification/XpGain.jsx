@@ -5,7 +5,7 @@ import ProgressBar from '../ui/ProgressBar.jsx';
  * xp: respuesta del servidor { xp_awarded, xp_total, level, level_up, earned, next_level }
  */
 export default function XpGain({ xp }) {
-  const { xp_awarded: awarded, xp_total: total, level, level_up: levelUp, earned, next_level: next } = xp;
+  const { xp_awarded: awarded, badge_xp: badgeXp, xp_total: total, level, level_up: levelUp, earned, next_level: next } = xp;
   const span = next ? next.min_xp - level.min_xp : 1;
   const inLevel = next ? total - level.min_xp : 1;
 
@@ -27,6 +27,7 @@ export default function XpGain({ xp }) {
               {earned > 0 ? 'Ya habías obtenido este XP antes.' : 'Esta vez no sumaste XP.'}
             </p>
           )}
+          {badgeXp > 0 && <p className="small mb-0 cq-xp-text">+{badgeXp} XP por insignias nuevas</p>}
           <p className="cq-muted small mb-0">
             Total: {total} XP · Nivel {level.number}, {level.name}
           </p>

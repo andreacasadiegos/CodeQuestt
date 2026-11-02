@@ -5,8 +5,9 @@
  * GET  /api/activities/{id}          (privada) Preguntas sin respuestas correctas.
  * POST /api/activities/{id}/submit   (privada) Califica, guarda el intento y otorga XP.
  *
- * El navegador solo envía respuestas. El servidor califica, calcula el XP
- * y actualiza el nivel y el avance; ningún dato de puntaje se acepta del cliente.
+ * El navegador solo envía respuestas. El servidor califica, calcula el XP,
+ * actualiza el nivel y el avance y otorga las insignias; ningún dato de
+ * puntaje se acepta del cliente.
  */
 
 declare(strict_types=1);
@@ -68,6 +69,7 @@ final class ActivityController
         $db->beginTransaction();
         try {
             (new User())->lockForUpdate($userId);
+            $levelBefore = $xpService->state($userId)['level'];
 
             $award = $xpService->improvement($userId, $activity['id'], $earned);
             $attempts = new Attempt();
@@ -80,6 +82,8 @@ final class ActivityController
 
             $xp = $xpService->award($userId, $award, 'actividad', $attemptId, null, 'Actividad: ' . $activity['title']);
             $progress = (new ProgressService())->refreshModule($userId, $module['id'], $pathId);
+            $newBadges = (new BadgeService())->evaluate($userId);
+            $final = $xpService->state($userId);
 
             $db->commit();
         } catch (Throwable $e) {
@@ -96,7 +100,13 @@ final class ActivityController
             'passed'     => $passed,
             'pass_pct'   => $activity['pass_pct'],
             'results'    => $grade['results'],
-            'xp'         => $xp + ['earned' => $earned, 'next_level' => (new Level())->next($xp['level']['number'])],
+            'xp'         => [
+                'xp_awarded' => $xp['xp_awarded'],
+                'badge_xp'   => array_sum(array_column($newBadges, 'xp_reward')),
+                'earned'     => $earned,
+                'level_up'   => $final['level']['number'] > $levelBefore['number'],
+            ] + $final,
+            'badges'     => $newBadges,
             'progress'   => $progress,
             'next_lesson_id' => $this->nextLessonId($activity, $lessons),
         ], 201);
@@ -117,10 +127,14 @@ final class ActivityController
 
         $service = new ProgressService();
         $lessons = $service->lessonsWithState($userId, $activity['module_id'], $pathId);
-        if (!$service->isUnlocked($activity, $lessons)) {
-            $message = $activity['kind'] === 'practica'
-                ? 'Lee primero la lección de esta práctica.'
-                : 'Lee todas las lecciones del módulo para desbloquear esta actividad.';
+        $evaluationPassed = $activity['kind'] === 'reto'
+            && $service->evaluationPassed($userId, $activity['module_id'], $pathId);
+        if (!$service->isUnlocked($activity, $lessons, $evaluationPassed)) {
+            $message = match ($activity['kind']) {
+                'practica' => 'Lee primero la lección de esta práctica.',
+                'reto'     => 'Aprueba la evaluación del módulo para desbloquear el reto.',
+                default    => 'Lee todas las lecciones del módulo para desbloquear esta actividad.',
+            };
             Response::error($message, 403);
         }
 
