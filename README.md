@@ -52,6 +52,14 @@ En internet todo vive en Vercel (frontend React + API PHP como función) y la
 base de datos en Supabase (`database/supabase/codequest_supabase.sql`).
 Los pasos están en [docs/despliegue.md](docs/despliegue.md).
 
+## Administrador
+
+Una cuenta con rol `admin` entra a `/admin` y ve los resultados de todos los
+estudiantes (ruta, nivel, XP, actividades aprobadas, promedio, insignias e
+intentos), con búsqueda y descarga en CSV. Para crear el administrador,
+registra la cuenta normalmente y ejecuta `database/supabase/migracion_admin.sql`
+en Supabase (o `database/08_rol_admin.sql` en XAMPP) con su correo.
+
 ## Base de datos
 
 1. En el XAMPP Control Panel, pulsa **Start** en **MySQL**.

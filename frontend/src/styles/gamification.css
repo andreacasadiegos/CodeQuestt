@@ -123,3 +123,17 @@
 .cq-history li + li { border-top: var(--cq-border); }
 .cq-danger-text { color: var(--cq-danger); }
 .cq-warning-text { color: var(--cq-warning); }
+
+/* Panel de administración */
+.cq-admin-row { cursor: pointer; }
+.cq-admin-row:hover td { background: rgba(139, 92, 246, 0.08); }
+.cq-admin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(250, 204, 21, 0.35);
+  color: var(--cq-xp);
+  font-size: 0.85rem;
+}

@@ -111,6 +111,8 @@ final class User
             return null;
         }
 
+        $role = $this->role($id);
+
         return [
             'id'               => (int) $row['id'],
             'full_name'        => $row['full_name'],
@@ -120,8 +122,25 @@ final class User
             'path'             => $row['path_code'] === null
                 ? null
                 : ['code' => $row['path_code'], 'name' => $row['path_name']],
-            'needs_diagnostic' => $row['path_code'] === null,
+            'role'             => $role,
+            'needs_diagnostic' => $row['path_code'] === null && $role !== 'admin',
             'created_at'       => $row['created_at'],
         ];
+    }
+
+    /**
+     * Rol del usuario: 'estudiante' o 'admin'.
+     * Si la base aún no tiene la columna role (falta la migración),
+     * todos son estudiantes y la aplicación sigue funcionando.
+     */
+    public function role(int $id): string
+    {
+        try {
+            $stmt = $this->db->prepare('SELECT role FROM users WHERE id = ?');
+            $stmt->execute([$id]);
+            return $stmt->fetchColumn() === 'admin' ? 'admin' : 'estudiante';
+        } catch (PDOException) {
+            return 'estudiante';
+        }
     }
 }

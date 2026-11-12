@@ -176,6 +176,7 @@ CREATE TABLE users (
   path_id        TINYINT UNSIGNED NULL COMMENT 'NULL hasta completar el diagnóstico',
   level_id       TINYINT UNSIGNED NOT NULL DEFAULT 1,
   xp_total       INT UNSIGNED NOT NULL DEFAULT 0,
+  role           ENUM('estudiante', 'admin') NOT NULL DEFAULT 'estudiante' COMMENT 'admin ve los resultados de todos',
   created_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at     DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),

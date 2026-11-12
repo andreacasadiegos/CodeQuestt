@@ -6,6 +6,7 @@ import Alert from '../components/ui/Alert.jsx';
 import FormField from '../components/ui/FormField.jsx';
 import { useAuth } from '../hooks/useAuth.js';
 import { validateLogin } from '../utils/validators.js';
+import { homeFor } from '../utils/home.js';
 
 /** Inicio de sesión. Vuelve a la página que el estudiante quería abrir. */
 export default function LoginPage() {
@@ -36,8 +37,7 @@ export default function LoginPage() {
     setSubmitting(true);
     try {
       const user = await login(form);
-      const fallback = user.needs_diagnostic ? '/diagnostico' : '/panel';
-      navigate(location.state?.from ?? fallback, { replace: true });
+      navigate(location.state?.from ?? homeFor(user), { replace: true });
     } catch (error) {
       setErrors(error.fields ?? {});
       setServerError(error.message);
