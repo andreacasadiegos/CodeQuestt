@@ -9,7 +9,10 @@
  */
 
 return [
+    // Base de datos local (XAMPP / MySQL).
+    // Para Supabase (PostgreSQL) usa el bloque comentado de abajo.
     'db' => [
+        'driver'   => 'mysql',
         'host'     => '127.0.0.1',
         'port'     => 3306,
         'name'     => 'codequest_db',
@@ -17,6 +20,18 @@ return [
         'password' => '',          // En XAMPP, root no tiene contraseña por defecto.
         'charset'  => 'utf8mb4',
     ],
+
+    // Supabase: Project Settings -> Database -> Connection string ->
+    // "Session pooler" (funciona en cualquier hosting, también sin IPv6).
+    // 'db' => [
+    //     'driver'   => 'pgsql',
+    //     'host'     => 'aws-0-us-east-1.pooler.supabase.com',
+    //     'port'     => 5432,
+    //     'name'     => 'postgres',
+    //     'user'     => 'postgres.TU_ID_DE_PROYECTO',
+    //     'password' => 'LA_CONTRASEÑA_DE_LA_BASE',
+    //     'sslmode'  => 'require',
+    // ],
 
     'app' => [
         'env'      => 'development', // 'production' oculta los detalles de los errores.

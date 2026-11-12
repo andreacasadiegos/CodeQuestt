@@ -46,6 +46,12 @@ codequest/
 5. Abre <http://localhost:5173>. Debe aparecer el mensaje
    «La API de CodeQuest está funcionando».
 
+## Publicar en internet (Vercel)
+
+En internet todo vive en Vercel (frontend React + API PHP como función) y la
+base de datos en Supabase (`database/supabase/codequest_supabase.sql`).
+Los pasos están en [docs/despliegue.md](docs/despliegue.md).
+
 ## Base de datos
 
 1. En el XAMPP Control Panel, pulsa **Start** en **MySQL**.

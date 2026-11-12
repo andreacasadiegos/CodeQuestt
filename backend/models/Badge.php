@@ -51,7 +51,7 @@ final class Badge
     /** Registra la insignia. Devuelve false si el estudiante ya la tenía. */
     public function grant(int $userId, int $badgeId): bool
     {
-        $stmt = $this->db->prepare('INSERT IGNORE INTO user_badges (user_id, badge_id) VALUES (?, ?)');
+        $stmt = $this->db->prepare(Database::insertIgnore('user_badges', ['user_id', 'badge_id']));
         $stmt->execute([$userId, $badgeId]);
         return $stmt->rowCount() === 1;
     }
