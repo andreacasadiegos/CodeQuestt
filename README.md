@@ -48,7 +48,8 @@ codequest/
 
 ## Publicar en internet (Vercel)
 
-Vercel solo publica el frontend; el backend PHP y MySQL necesitan un hosting
+Vercel solo publica el frontend. En internet la base de datos va en Supabase
+(`database/supabase/codequest_supabase.sql`) y el backend PHP en un hosting
 aparte. Los pasos están en [docs/despliegue.md](docs/despliegue.md).
 
 ## Base de datos

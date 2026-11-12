@@ -76,9 +76,9 @@ final class Attempt
     public function stats(int $userId): array
     {
         $stmt = $this->db->prepare(
-            "SELECT COUNT(DISTINCT IF(t.passed = 1, t.activity_id, NULL)) AS completed,
-                    COUNT(DISTINCT IF(t.score_pct = 100, t.activity_id, NULL)) AS perfect,
-                    COUNT(DISTINCT IF(t.passed = 1 AND a.kind = 'reto', t.activity_id, NULL)) AS retos
+            "SELECT COUNT(DISTINCT CASE WHEN t.passed = 1 THEN t.activity_id END) AS completed,
+                    COUNT(DISTINCT CASE WHEN t.score_pct = 100 THEN t.activity_id END) AS perfect,
+                    COUNT(DISTINCT CASE WHEN t.passed = 1 AND a.kind = 'reto' THEN t.activity_id END) AS retos
              FROM attempts t
              JOIN activities a ON a.id = t.activity_id
              WHERE t.user_id = ? AND a.kind <> 'diagnostico'"

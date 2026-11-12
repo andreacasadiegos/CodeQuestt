@@ -35,7 +35,7 @@ final class Activity
             "SELECT id, module_id, lesson_id, title, kind, difficulty, base_xp, pass_pct
              FROM activities
              WHERE module_id = ? AND kind <> 'diagnostico' AND (path_id IS NULL OR path_id = ?)
-             ORDER BY FIELD(kind, 'practica', 'evaluacion', 'reto'), difficulty, sort_order, id"
+             ORDER BY CASE kind WHEN 'practica' THEN 1 WHEN 'evaluacion' THEN 2 ELSE 3 END, difficulty, sort_order, id"
         );
         $stmt->execute([$moduleId, $pathId]);
 
