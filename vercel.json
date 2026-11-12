@@ -7,18 +7,17 @@
   "functions": {
     "api/index.php": {
       "runtime": "vercel-php@0.7.4",
-      "excludeFiles": [
-        "frontend/**",
-        "database/**",
-        "docs/**",
-        "node_modules/**",
-        "vercel.json",
-        "backend/config/config.php"
-      ]
+      "excludeFiles": "{frontend/**,database/**,docs/**,node_modules/**,vercel.json,backend/config/config.php}"
     }
   },
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/index.php?__route=:path*" },
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/api/:path*",
+      "destination": "/api/index.php?__route=:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
   ]
 }
