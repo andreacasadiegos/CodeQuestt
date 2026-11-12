@@ -3,6 +3,7 @@ import { Link, NavLink, useNavigate } from 'react-router-dom';
 
 import { useAuth } from '../../hooks/useAuth.js';
 import Logo from '../ui/Logo.jsx';
+import { homeFor } from '../../utils/home.js';
 
 /** Barra de navegación superior, adaptable a celular. */
 export default function Navbar() {
@@ -37,7 +38,9 @@ export default function Navbar() {
         </button>
 
         <div id="cq-nav-menu" className={`cq-nav-menu ${open ? 'is-open' : ''}`}>
-          {user && !user.needs_diagnostic ? (
+          {user?.role === 'admin' ? (
+            <NavLink to="/admin" onClick={close} className="cq-nav-link">Estudiantes</NavLink>
+          ) : user && !user.needs_diagnostic ? (
             <>
               <NavLink to="/panel" onClick={close} className="cq-nav-link">Panel</NavLink>
               <NavLink to="/progreso" onClick={close} className="cq-nav-link">Progreso</NavLink>
@@ -54,13 +57,17 @@ export default function Navbar() {
           {user ? (
             <>
               <Link
-                to={user.needs_diagnostic ? '/diagnostico' : '/panel'}
+                to={homeFor(user)}
                 onClick={close}
                 className="btn btn-cq btn-cq-outline"
               >
                 <i className="bi bi-person-circle" aria-hidden="true" />
                 {user.full_name.split(' ')[0]}
-                {!user.needs_diagnostic && <span className="cq-nav-xp">{user.xp_total} XP</span>}
+                {user.role === 'admin' ? (
+                  <span className="cq-nav-xp">Admin</span>
+                ) : (
+                  !user.needs_diagnostic && <span className="cq-nav-xp">{user.xp_total} XP</span>
+                )}
               </Link>
               <button type="button" onClick={handleLogout} className="btn btn-cq btn-cq-outline">
                 <i className="bi bi-box-arrow-right" aria-hidden="true" />

@@ -16,7 +16,7 @@ BEGIN;
 -- ---------------------------------------------------------------------
 -- 0. LIMPIEZA (permite volver a ejecutar este archivo desde cero)
 -- ---------------------------------------------------------------------
-DROP TABLE IF EXISTS module_progress, lesson_progress, user_badges, xp_transactions,
+DROP TABLE IF EXISTS php_sessions, module_progress, lesson_progress, user_badges, xp_transactions,
   diagnostics, attempt_answers, attempts, users, badges, answer_options, questions,
   activities, lessons, modules, levels, learning_paths CASCADE;
 
@@ -133,6 +133,7 @@ CREATE TABLE users (
   path_id        SMALLINT NULL REFERENCES learning_paths (id) ON UPDATE CASCADE ON DELETE RESTRICT,
   level_id       SMALLINT NOT NULL DEFAULT 1 REFERENCES levels (id) ON UPDATE CASCADE ON DELETE RESTRICT,
   xp_total       INTEGER NOT NULL DEFAULT 0 CHECK (xp_total >= 0),
+  role           VARCHAR(20) NOT NULL DEFAULT 'estudiante' CHECK (role IN ('estudiante', 'admin')),
   created_at     TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP,
   updated_at     TIMESTAMP(0) NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

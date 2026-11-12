@@ -35,3 +35,7 @@ $router->get('/dashboard', [DashboardController::class, 'show'], true);
 $router->get('/badges', [BadgeController::class, 'index'], true);
 $router->get('/progress', [ProgressController::class, 'show'], true);
 $router->post('/path/advance', [PathController::class, 'advance'], true);
+
+// Administración (solo rol admin)
+$router->get('/admin/students', [AdminController::class, 'students'], true);
+$router->get('/admin/students/{id}', [AdminController::class, 'student'], true);

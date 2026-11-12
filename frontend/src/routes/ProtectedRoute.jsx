@@ -23,6 +23,11 @@ export default function ProtectedRoute({ requireDiagnostic = false, onlyBeforeDi
     return <Navigate to="/iniciar-sesion" replace state={{ from: location.pathname }} />;
   }
 
+  // El administrador no hace el recorrido de estudiante: va a su panel.
+  if (user.role === 'admin') {
+    return <Navigate to="/admin" replace />;
+  }
+
   if (requireDiagnostic && user.needs_diagnostic) {
     return <Navigate to="/diagnostico" replace />;
   }
