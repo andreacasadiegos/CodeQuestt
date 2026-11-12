@@ -46,6 +46,11 @@ codequest/
 5. Abre <http://localhost:5173>. Debe aparecer el mensaje
    «La API de CodeQuest está funcionando».
 
+## Publicar en internet (Vercel)
+
+Vercel solo publica el frontend; el backend PHP y MySQL necesitan un hosting
+aparte. Los pasos están en [docs/despliegue.md](docs/despliegue.md).
+
 ## Base de datos
 
 1. En el XAMPP Control Panel, pulsa **Start** en **MySQL**.
