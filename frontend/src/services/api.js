@@ -5,7 +5,7 @@
  * errores y el envío de la cookie de sesión estén en un solo lugar.
  */
 // En local, Vite reenvía /api a XAMPP (vite.config.js).
-// En Vercel, frontend/vercel.json reenvía /api al servidor PHP.
+// En Vercel, vercel.json (en la raíz) envía /api a la función PHP api/index.php.
 // Así el navegador siempre habla con el mismo dominio y la cookie de sesión
 // funciona sin CORS. VITE_API_URL solo se usa si se quiere otra dirección.
 const BASE_URL = import.meta.env.VITE_API_URL || '/api';

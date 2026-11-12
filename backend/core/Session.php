@@ -19,13 +19,18 @@ final class Session
 
         $config = Config::get('session');
 
+        if (($config['handler'] ?? 'files') === 'database') {
+            session_set_save_handler(new DatabaseSessionHandler(), true);
+        }
+
         ini_set('session.use_strict_mode', '1');
         ini_set('session.use_only_cookies', '1');
         session_name($config['name']);
         session_set_cookie_params([
             'lifetime' => 0,
             'path'     => '/',
-            'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+            'secure'   => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https',
             'httponly' => true,
             'samesite' => 'Lax',
         ]);
@@ -37,7 +42,11 @@ final class Session
             self::destroy();
             session_start();
         }
-        $_SESSION['last_activity'] = time();
+        // Solo se actualiza cada minuto: así la mayoría de peticiones no
+        // reescriben la sesión (importante cuando se guarda en la base).
+        if ($last === null || time() - $last >= 60) {
+            $_SESSION['last_activity'] = time();
+        }
     }
 
     /** Guarda al usuario en la sesión con un identificador nuevo. */

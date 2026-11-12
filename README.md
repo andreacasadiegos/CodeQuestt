@@ -48,9 +48,9 @@ codequest/
 
 ## Publicar en internet (Vercel)
 
-Vercel solo publica el frontend. En internet la base de datos va en Supabase
-(`database/supabase/codequest_supabase.sql`) y el backend PHP en un hosting
-aparte. Los pasos están en [docs/despliegue.md](docs/despliegue.md).
+En internet todo vive en Vercel (frontend React + API PHP como función) y la
+base de datos en Supabase (`database/supabase/codequest_supabase.sql`).
+Los pasos están en [docs/despliegue.md](docs/despliegue.md).
 
 ## Base de datos
 
