@@ -41,6 +41,11 @@ Reinicia Apache. No guardes la clave en un archivo que se suba al repositorio. S
 
 Estos límites son un punto de partida para una prueba piloto, no un presupuesto monetario garantizado. Los límites de cuota y precios del proveedor pueden cambiar y se administran también desde Google AI Studio / Google Cloud.
 
+
+### Límite por estudiante y presupuesto global
+
+El límite de 20 mensajes se aplica por cuenta y por ventana móvil de 24 horas. Junto con el máximo de salida y el contexto corto, reduce el consumo individual. **No equivale a un tope monetario global garantizado**: el consumo total depende también del número de estudiantes activos. Para el piloto, configura y revisa cuotas del proyecto en Google AI Studio / Google Cloud y establece alertas de presupuesto en Cloud Billing cuando el proyecto tenga facturación habilitada. Las cuotas del proveedor son el límite técnico adicional.
+
 ## 5. Aplicar la migración de historial
 
 Ejecuta **solo una** migración, según el motor de la base de datos:
