@@ -58,3 +58,6 @@
 @media (prefers-reduced-motion: reduce) {
   .cq-tutor-typing span { animation: none; }
 }
+
+.cq-dashboard-tutor { background: linear-gradient(110deg,#fff 0%,#eff9ef 100%); }
+.cq-dashboard-tutor-icon { display:grid; place-items:center; width:58px; height:58px; border-radius:18px; color:#fff; background:var(--cq-gradient); font-size:1.65rem; flex-shrink:0; }
