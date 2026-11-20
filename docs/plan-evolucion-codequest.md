@@ -4,7 +4,7 @@
 
 - Renovación integral de la experiencia con una identidad visual inspirada en plataformas de aprendizaje gamificadas: amable, colorida, clara y responsive. No se copiará la identidad de Duolingo.
 - Mejoras para todo el producto, con prioridad en el dashboard del estudiante.
-- Tutor educativo CodeBot impulsado por IA.
+- Tutor educativo CodeBot impulsado por Google Gemini.
 - Historial persistente de conversaciones por estudiante.
 - Se conserva la arquitectura existente: React + Vite, API REST PHP y MySQL/Supabase.
 - La autenticación existente basada en cookie de sesión seguirá siendo la fuente de identidad.
@@ -58,7 +58,7 @@ Tablas nuevas, sujetas a validar el motor y convenciones del esquema real antes 
 - Claves foráneas y borrado en cascada desde la conversación; el acceso siempre se filtra por el usuario autenticado.
 - No guardar claves API ni datos secretos en estas tablas.
 
-Se debe definir una política de retención y un límite de tamaño por mensaje/conversación antes de producción. No se guardarán datos sensibles innecesarios.
+Límites iniciales implementados: 20 preguntas por ventana móvil de 24 horas, 2.000 caracteres por mensaje, 12 mensajes de contexto, 900 tokens de salida y 50 conversaciones activas listadas. Antes de producción debe revisarse la política de retención. No se guardarán datos sensibles innecesarios.
 
 ### Seguridad y confiabilidad
 
@@ -72,12 +72,12 @@ Se debe definir una política de retención y un límite de tamaño por mensaje/
 
 ## Implementación por fases
 
-### Fase 0 — Preparación (iniciada)
+### Fase 0 — Preparación (completada)
 - Crear rama de trabajo independiente.
 - Documentar arquitectura, riesgos y criterios de aceptación.
 - No modificar `main` ni ejecutar scripts SQL destructivos.
 
-### Fase 1 — Sistema visual y navegación
+### Fase 1 — Sistema visual y navegación (primera iteración implementada; requiere revisión visual)
 - Definir tokens claros: verde de marca, fondos suaves, tarjetas blancas, acentos cálidos para XP/recompensas y colores accesibles para estados.
 - Renovar navbar, footer, botones, tarjetas, formularios, estados de carga/error y navegación móvil.
 - Adaptar todas las páginas existentes sin cambiar sus contratos de API.
@@ -85,7 +85,7 @@ Se debe definir una política de retención y un límite de tamaño por mensaje/
 
 Criterio de aceptación: todas las rutas actuales se ven coherentes en móvil y escritorio; registro, login, diagnóstico y navegación siguen funcionando.
 
-### Fase 2 — Dashboard del estudiante
+### Fase 2 — Dashboard del estudiante (primera iteración implementada)
 - Mejorar jerarquía visual de bienvenida, nivel, XP y racha si el backend ya dispone de ese dato.
 - Mostrar progreso por módulo, siguiente paso recomendado y accesos directos.
 - Añadir tarjeta de entrada a CodeBot.
@@ -93,7 +93,7 @@ Criterio de aceptación: todas las rutas actuales se ven coherentes en móvil y 
 
 Criterio de aceptación: los datos y enlaces reflejan el estado real del estudiante y se conservan las funciones existentes.
 
-### Fase 3 — CodeBot e historial persistente
+### Fase 3 — CodeBot e historial persistente (base de implementación añadida; pendiente configuración y pruebas)
 - Acordar proveedor/modelo IA y configuración de presupuesto.
 - Crear migración aditiva para conversaciones y mensajes, compatible con MySQL/Supabase.
 - Implementar servicios y controladores PHP, rutas privadas y autorización por propietario.
