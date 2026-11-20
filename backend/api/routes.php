@@ -30,6 +30,13 @@ $router->post('/lessons/{id}/complete', [LessonController::class, 'complete'], t
 $router->get('/activities/{id}', [ActivityController::class, 'show'], true);
 $router->post('/activities/{id}/submit', [ActivityController::class, 'submit'], true);
 
+// Tutor educativo CodeBot (historial privado y persistente)
+$router->get('/tutor/conversations', [TutorController::class, 'index'], true);
+$router->post('/tutor/conversations', [TutorController::class, 'create'], true);
+$router->get('/tutor/conversations/{id}', [TutorController::class, 'show'], true);
+$router->post('/tutor/conversations/{id}/messages', [TutorController::class, 'send'], true);
+$router->post('/tutor/conversations/{id}/archive', [TutorController::class, 'archive'], true);
+
 // Gamificación y seguimiento
 $router->get('/dashboard', [DashboardController::class, 'show'], true);
 $router->get('/badges', [BadgeController::class, 'index'], true);
