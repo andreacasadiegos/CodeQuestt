@@ -45,6 +45,7 @@ export default function Navbar() {
               <NavLink to="/panel" onClick={close} className="cq-nav-link">Panel</NavLink>
               <NavLink to="/progreso" onClick={close} className="cq-nav-link">Progreso</NavLink>
               <NavLink to="/insignias" onClick={close} className="cq-nav-link">Insignias</NavLink>
+              <NavLink to="/tutor" onClick={close} className="cq-nav-link"><i className="bi bi-stars me-1" />CodeBot</NavLink>
             </>
           ) : (
             <>
