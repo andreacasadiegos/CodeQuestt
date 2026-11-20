@@ -51,7 +51,7 @@ final class GeminiTutorService
         ];
 
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/'
-            . rawurlencode($model) . ':generateContent?key=' . rawurlencode($apiKey);
+            . rawurlencode($model) . ':generateContent';
         $body = json_encode($payload, JSON_UNESCAPED_UNICODE);
         if ($body === false) {
             throw new RuntimeException('No se pudo preparar la solicitud de CodeBot.');
@@ -83,7 +83,7 @@ final class GeminiTutorService
             curl_setopt_array($curl, [
                 CURLOPT_POST => true,
                 CURLOPT_POSTFIELDS => $body,
-                CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
+                CURLOPT_HTTPHEADER => ['Content-Type: application/json', 'x-goog-api-key: ' . $apiKey],
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_CONNECTTIMEOUT => 8,
                 CURLOPT_TIMEOUT => 35,
