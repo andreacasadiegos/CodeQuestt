@@ -1,44 +1,12 @@
-/*
- * Identidad visual de CodeQuest.
- * Todos los colores y medidas se toman de aquí; ningún componente
- * debe escribir un color directamente.
- */
+/* Identidad visual renovada de CodeQuest: clara, cercana y gamificada. */
 :root {
-  /* Fondos (azul oscuro) */
-  --cq-bg: #0d0a22;
-  --cq-surface: #18123a;
-  --cq-surface-2: #221a4f;
-  --cq-surface-3: #2d2366;
-
-  /* Marca (morado y violeta) */
-  --cq-primary: #7c3aed;
-  --cq-primary-hover: #6d28d9;
-  --cq-accent: #a78bfa;
-  --cq-accent-soft: rgba(167, 139, 250, 0.14);
-  --cq-blue: #3b82f6;
-  --cq-cyan: #22d3ee;
-  --cq-gradient: linear-gradient(135deg, #7c3aed 0%, #4f46e5 55%, #3b82f6 100%);
-
-  /* Texto */
-  --cq-text: #f4f1ff;
-  --cq-text-muted: #b8b0d9;
-  --cq-text-dim: #8a82b3;
-
-  /* Estados */
-  --cq-success: #34d399;
-  --cq-danger: #f87171;
-  --cq-warning: #fbbf24;
-  --cq-xp: #facc15;
-
-  /* Tipografía */
-  --cq-font: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --cq-font-code: ui-monospace, 'Cascadia Code', 'Consolas', 'SFMono-Regular', Menlo, monospace;
-
-  /* Forma */
-  --cq-radius: 18px;
-  --cq-radius-sm: 12px;
-  --cq-border-color: rgba(167, 139, 250, 0.22);
-  --cq-border: 1px solid var(--cq-border-color);
-  --cq-shadow: 0 14px 40px rgba(5, 3, 20, 0.55);
-  --cq-glow: 0 0 0 1px rgba(167, 139, 250, 0.35), 0 10px 30px rgba(124, 58, 237, 0.35);
+  --cq-bg: #f5f8f4; --cq-surface: #ffffff; --cq-surface-2: #f0f7ef; --cq-surface-3: #e4f2e2;
+  --cq-primary: #2f9e55; --cq-primary-hover: #247d43; --cq-accent: #257a43; --cq-accent-soft: rgba(47,158,85,.10);
+  --cq-blue: #3987d8; --cq-cyan: #20a6a6; --cq-gradient: linear-gradient(135deg,#35ad62 0%,#218b50 100%);
+  --cq-text: #203329; --cq-text-muted: #607268; --cq-text-dim: #7d8c82;
+  --cq-success: #23834a; --cq-danger: #c43e42; --cq-warning: #a96512; --cq-xp: #b7791f;
+  --cq-font: system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --cq-font-code: ui-monospace,'Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
+  --cq-radius: 20px; --cq-radius-sm: 13px; --cq-border-color: #e1eae1; --cq-border: 1px solid var(--cq-border-color);
+  --cq-shadow: 0 8px 28px rgba(32,64,43,.08); --cq-glow: 0 8px 24px rgba(47,158,85,.18);
 }
