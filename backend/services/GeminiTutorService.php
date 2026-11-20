@@ -101,7 +101,7 @@ final class GeminiTutorService
 
         $context = stream_context_create(['http' => [
             'method' => 'POST',
-            'header' => "Content-Type: application/json\r\n",
+            'header' => "Content-Type: application/json\r\n" . "x-goog-api-key: " . $apiKey . "\r\n",
             'content' => $body,
             'timeout' => 35,
             'ignore_errors' => true,
