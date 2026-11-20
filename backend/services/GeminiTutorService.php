@@ -15,7 +15,7 @@ final class GeminiTutorService
             throw new RuntimeException('CodeBot aún no está configurado. El administrador debe agregar GEMINI_API_KEY en el servidor.');
         }
 
-        $model = getenv('GEMINI_MODEL') ?: 'gemini-2.5-flash';
+        $model = getenv('GEMINI_MODEL') ?: 'gemini-2.5-flash-lite';
         if (!preg_match('/^[a-zA-Z0-9._-]{3,80}$/', $model)) {
             throw new RuntimeException('La configuración del modelo de CodeBot no es válida.');
         }
@@ -57,7 +57,7 @@ final class GeminiTutorService
             throw new RuntimeException('No se pudo preparar la solicitud de CodeBot.');
         }
 
-        $response = $this->postJson($url, $body);
+        $response = $this->postJson($url, $body, $apiKey);
         $decoded = json_decode($response['body'], true);
         if ($response['status'] < 200 || $response['status'] >= 300) {
             error_log('[CodeQuest Gemini] HTTP ' . $response['status'] . ': ' . substr($response['body'], 0, 500));
@@ -76,7 +76,7 @@ final class GeminiTutorService
         return trim($text);
     }
 
-    private function postJson(string $url, string $body): array
+    private function postJson(string $url, string $body, string $apiKey): array
     {
         if (function_exists('curl_init')) {
             $curl = curl_init($url);
