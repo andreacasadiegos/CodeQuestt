@@ -6,6 +6,10 @@ declare(strict_types=1);
 
 final class TutorController
 {
+    /** Preguntas a Gemini permitidas por estudiante cada 24 horas. */
+    private const DAILY_MESSAGE_LIMIT = 20;
+    private const MAX_NEW_CONVERSATIONS_PER_DAY = 30;
+
     private TutorConversation $conversations;
 
     public function __construct()
@@ -15,14 +19,42 @@ final class TutorController
 
     public function index(array $params): never
     {
-        Response::json(['conversations' => $this->conversations->allForUser((int) $params['userId'])]);
+        $userId = (int) $params['userId'];
+        $used = $this->conversations->countUserMessagesSince($userId, date('Y-m-d H:i:s', time() - 86400));
+
+        Response::json([
+            'conversations' => $this->conversations->allForUser($userId),
+            'usage' => [
+                'daily_limit' => self::DAILY_MESSAGE_LIMIT,
+                'remaining' => max(0, self::DAILY_MESSAGE_LIMIT - $used),
+            ],
+        ]);
     }
 
     public function create(array $params): never
     {
-        $id = $this->conversations->create((int) $params['userId']);
-        $conversation = $this->conversations->findForUser($id, (int) $params['userId']);
-        Response::json(['conversation' => $conversation, 'messages' => []], 201);
+        $userId = (int) $params['userId'];
+
+        // Si ya hay una conversación vacía, se reutiliza: no se duplican.
+        $existing = $this->conversations->findEmptyForUser($userId);
+        if ($existing !== null) {
+            Response::json([
+                'conversation' => $this->conversations->findForUser($existing, $userId),
+                'messages' => [],
+                'reused' => true,
+            ]);
+        }
+
+        $limiter = new RateLimiter();
+        $key = 'tutor-create:' . $userId;
+        if ($limiter->tooMany($key, self::MAX_NEW_CONVERSATIONS_PER_DAY, 86400)) {
+            Response::error('Creaste muchas conversaciones hoy. Continúa en una de las que ya tienes.', 429);
+        }
+        $limiter->hit($key, 86400);
+
+        $id = $this->conversations->create($userId);
+        $conversation = $this->conversations->findForUser($id, $userId);
+        Response::json(['conversation' => $conversation, 'messages' => [], 'reused' => false], 201);
     }
 
     public function show(array $params): never
@@ -64,9 +96,10 @@ final class TutorController
             ]);
         }
 
-        // Límite controlado: máximo 20 mensajes del estudiante cada 24 horas.
+        // Límite controlado: máximo DAILY_MESSAGE_LIMIT mensajes del estudiante cada 24 horas.
         $since = date('Y-m-d H:i:s', time() - 86400);
-        if ($this->conversations->countUserMessagesSince($userId, $since) >= 20) {
+        $used = $this->conversations->countUserMessagesSince($userId, $since);
+        if ($used >= self::DAILY_MESSAGE_LIMIT) {
             Response::error('Alcanzaste el límite diario de CodeBot. Puedes volver a escribir mañana.', 429);
         }
 
@@ -77,9 +110,8 @@ final class TutorController
 
         try {
             $answer = (new GeminiTutorService())->reply($history, $pathName);
-        } catch (RuntimeException $e) {
-            $status = str_contains($e->getMessage(), 'configurado') ? 503 : (str_contains($e->getMessage(), 'muchas solicitudes') ? 429 : 502);
-            Response::error($e->getMessage(), $status);
+        } catch (TutorUnavailableException $e) {
+            Response::error($e->getMessage(), $e->getCode() ?: 502);
         }
 
         // Guardar el intercambio solo cuando Gemini respondió correctamente.
@@ -88,7 +120,10 @@ final class TutorController
             'conversation' => $this->conversations->findForUser($id, $userId),
             'user_message' => ['role' => 'user', 'content' => $question],
             'assistant_message' => ['role' => 'model', 'content' => $answer],
-            'usage' => ['daily_limit' => 20],
+            'usage' => [
+                'daily_limit' => self::DAILY_MESSAGE_LIMIT,
+                'remaining' => max(0, self::DAILY_MESSAGE_LIMIT - $used - 1),
+            ],
         ]);
     }
 

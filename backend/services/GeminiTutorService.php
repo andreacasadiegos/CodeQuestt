@@ -10,14 +10,17 @@ final class GeminiTutorService
 
     public function reply(array $history, string $pathName): string
     {
-        $apiKey = getenv('GEMINI_API_KEY') ?: '';
+        // La clave vive solo en el servidor: variable de entorno (Vercel,
+        // PHP-FPM) o, como alternativa, config.php (que no se sube a Git).
+        $settings = self::settings();
+        $apiKey = $settings['api_key'];
         if ($apiKey === '') {
-            throw new RuntimeException('CodeBot aún no está configurado. El administrador debe agregar GEMINI_API_KEY en el servidor.');
+            throw new TutorUnavailableException('CodeBot aún no está configurado. El administrador debe agregar GEMINI_API_KEY en el servidor.', 503);
         }
 
-        $model = getenv('GEMINI_MODEL') ?: 'gemini-2.5-flash-lite';
+        $model = $settings['model'];
         if (!preg_match('/^[a-zA-Z0-9._-]{3,80}$/', $model)) {
-            throw new RuntimeException('La configuración del modelo de CodeBot no es válida.');
+            throw new TutorUnavailableException('La configuración del modelo de CodeBot no es válida.', 503);
         }
 
         $contents = [];
@@ -33,6 +36,8 @@ final class GeminiTutorService
 
         $system = "Eres CodeBot, tutor educativo de CodeQuest para estudiantes de grado 11. "
             . "Enseñas abstracción, patrones y algoritmos con lenguaje claro, ejemplos cotidianos y fragmentos pequeños de pseudocódigo o código. "
+            . "Explica paso a paso, numerando los pasos cuando el tema lo requiera, y ofrece un ejemplo concreto. "
+            . "Cuando el estudiante quiera practicar, plantea un ejercicio corto acorde a su nivel y espera su respuesta antes de corregirlo. "
             . "La ruta actual del estudiante es: " . ($pathName !== '' ? $pathName : 'aún no definida') . ". "
             . "Adapta la dificultad a esa ruta. Da pistas graduales y pregunta qué intentó el estudiante antes de revelar una solución completa. "
             . "Explica los errores con respeto y termina con un pequeño paso práctico cuando sea útil. "
@@ -54,26 +59,49 @@ final class GeminiTutorService
             . rawurlencode($model) . ':generateContent';
         $body = json_encode($payload, JSON_UNESCAPED_UNICODE);
         if ($body === false) {
-            throw new RuntimeException('No se pudo preparar la solicitud de CodeBot.');
+            throw new TutorUnavailableException('No se pudo preparar la solicitud de CodeBot.', 500);
         }
 
         $response = $this->postJson($url, $body, $apiKey);
         $decoded = json_decode($response['body'], true);
         if ($response['status'] < 200 || $response['status'] >= 300) {
             error_log('[CodeQuest Gemini] HTTP ' . $response['status'] . ': ' . substr($response['body'], 0, 500));
-            throw new RuntimeException(
-                $response['status'] === 429
-                    ? 'CodeBot está recibiendo muchas solicitudes. Inténtalo en un momento.'
-                    : 'No fue posible obtener una respuesta de CodeBot. Inténtalo nuevamente.'
-            );
+            if ($response['status'] === 429) {
+                throw new TutorUnavailableException('CodeBot está recibiendo muchas solicitudes. Inténtalo en un momento.', 429);
+            }
+            throw new TutorUnavailableException('No fue posible obtener una respuesta de CodeBot. Inténtalo nuevamente.', 502);
         }
 
-        $text = $decoded['candidates'][0]['content']['parts'][0]['text'] ?? '';
-        if (!is_string($text) || trim($text) === '') {
-            throw new RuntimeException('CodeBot no pudo generar una respuesta. Inténtalo nuevamente.');
+        // Gemini puede dividir la respuesta en varias partes: se unen todas.
+        $text = '';
+        foreach ($decoded['candidates'][0]['content']['parts'] ?? [] as $part) {
+            if (is_array($part) && isset($part['text']) && is_string($part['text'])) {
+                $text .= $part['text'];
+            }
+        }
+        if (trim($text) === '') {
+            $reason = $decoded['candidates'][0]['finishReason'] ?? ($decoded['promptFeedback']['blockReason'] ?? 'desconocido');
+            error_log('[CodeQuest Gemini] Respuesta vacía. Motivo: ' . (is_string($reason) ? $reason : 'desconocido'));
+            throw new TutorUnavailableException('CodeBot no pudo generar una respuesta a esa pregunta. Intenta reformularla.', 502);
         }
 
         return trim($text);
+    }
+
+    /** @return array{api_key: string, model: string} */
+    private static function settings(): array
+    {
+        $fromConfig = [];
+        try {
+            $fromConfig = Config::get('gemini') ?? [];
+        } catch (Throwable) {
+            $fromConfig = [];
+        }
+
+        return [
+            'api_key' => trim((string) (getenv('GEMINI_API_KEY') ?: ($fromConfig['api_key'] ?? ''))),
+            'model'   => trim((string) (getenv('GEMINI_MODEL') ?: ($fromConfig['model'] ?? 'gemini-2.5-flash-lite'))),
+        ];
     }
 
     private function postJson(string $url, string $body, string $apiKey): array
@@ -94,7 +122,7 @@ final class GeminiTutorService
             curl_close($curl);
             if ($result === false) {
                 error_log('[CodeQuest Gemini] cURL: ' . $error);
-                throw new RuntimeException('No se pudo conectar con CodeBot. Comprueba tu conexión e inténtalo nuevamente.');
+                throw new TutorUnavailableException('No se pudo conectar con CodeBot. Inténtalo nuevamente en un momento.', 502);
             }
             return ['status' => $status, 'body' => $result];
         }
@@ -114,7 +142,8 @@ final class GeminiTutorService
             }
         }
         if ($result === false) {
-            throw new RuntimeException('No se pudo conectar con CodeBot. Comprueba tu conexión e inténtalo nuevamente.');
+            error_log('[CodeQuest Gemini] No se pudo conectar (stream).');
+            throw new TutorUnavailableException('No se pudo conectar con CodeBot. Inténtalo nuevamente en un momento.', 502);
         }
         return ['status' => $status, 'body' => $result];
     }

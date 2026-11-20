@@ -21,11 +21,13 @@ export default function TutorPage() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
+  const [usage, setUsage] = useState(null);
   const endRef = useRef(null);
 
   const refreshConversations = useCallback(async () => {
     const result = await getConversations();
     setConversations(result.conversations ?? []);
+    if (result.usage) setUsage(result.usage);
     return result.conversations ?? [];
   }, []);
 
@@ -51,15 +53,16 @@ export default function TutorPage() {
         if (!alive) return;
         const items = result.conversations ?? [];
         setConversations(items);
+        if (result.usage) setUsage(result.usage);
         if (items.length) {
           const first = await getConversation(items[0].id);
           if (!alive) return;
           setActiveId(first.conversation.id);
           setMessages(first.messages ?? []);
-        } else {
-          // No crear automáticamente: React StrictMode puede ejecutar el efecto dos veces en desarrollo.
-          // El estudiante inicia la primera conversación desde el botón explícito.
         }
+        // Si no hay conversaciones, no se crea ninguna al montar (StrictMode
+        // ejecuta el efecto dos veces en desarrollo): se crea al enviar la
+        // primera pregunta, y el servidor reutiliza una conversación vacía.
       } catch (e) {
         if (alive) setError(e.message);
       } finally {
@@ -91,19 +94,29 @@ export default function TutorPage() {
   const submit = async (event) => {
     event.preventDefault();
     const message = draft.trim();
-    if (!message || !activeId || sending) return;
+    if (!message || sending) return;
     setDraft('');
     setSending(true);
     setError('');
     setMessages((current) => [...current, { role: 'user', content: message }]);
     try {
-      const result = await sendTutorMessage(activeId, message);
+      // Primera pregunta de un estudiante nuevo: se abre la conversación aquí.
+      let conversationId = activeId;
+      if (!conversationId) {
+        const created = await createConversation();
+        conversationId = created.conversation.id;
+        setActiveId(conversationId);
+      }
+      const result = await sendTutorMessage(conversationId, message);
       setMessages((current) => [...current, result.assistant_message]);
+      if (result.usage) setUsage(result.usage);
       await refreshConversations();
     } catch (e) {
       setError(e.message);
       setMessages((current) => current.filter((item, index) => !(index === current.length - 1 && item.role === 'user' && item.content === message)));
       setDraft(message);
+      // Si la conversación se creó en este envío, que aparezca en el historial.
+      refreshConversations().catch(() => {});
     } finally {
       setSending(false);
     }
@@ -177,7 +190,7 @@ export default function TutorPage() {
                 <strong>CodeBot</strong>
                 <div className="cq-muted small">Gemini · Tutor de programación</div>
               </div>
-              {activeId && <button type="button" className="btn btn-sm btn-cq-outline" onClick={archiveActive} disabled={sending} title="Archivar conversación"><i className="bi bi-archive" /> <span className="d-none d-sm-inline">Archivar</span></button>}
+              {activeId && <button type="button" className="btn btn-sm btn-cq btn-cq-outline" onClick={archiveActive} disabled={sending} title="Archivar conversación"><i className="bi bi-archive" /> <span className="d-none d-sm-inline">Archivar</span></button>}
             </div>
 
             <div className="cq-tutor-messages" aria-live="polite">
@@ -211,11 +224,20 @@ export default function TutorPage() {
                 placeholder="Escribe tu pregunta sobre programación…"
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
-                disabled={!activeId || sending || loading}
+                disabled={sending || loading}
+                onKeyDown={(event) => {
+                  // Enter envía; Shift+Enter agrega una línea nueva.
+                  if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
+                    event.preventDefault();
+                    event.currentTarget.form?.requestSubmit();
+                  }
+                }}
               />
-              <div className="d-flex justify-content-between align-items-center mt-2 gap-2">
-                <small className="cq-muted">Máximo 20 preguntas al día · {draft.length}/2000</small>
-                <button type="submit" className="btn btn-cq btn-cq-primary" disabled={!activeId || !draft.trim() || sending || loading}>
+              <div className="d-flex flex-wrap justify-content-between align-items-center mt-2 gap-2">
+                <small className="cq-muted">
+                  {usage ? `Te quedan ${usage.remaining} de ${usage.daily_limit} preguntas hoy` : 'Máximo 20 preguntas al día'} · {draft.length}/2000
+                </small>
+                <button type="submit" className="btn btn-cq btn-cq-primary" disabled={!draft.trim() || sending || loading}>
                   Enviar <i className="bi bi-send-fill" aria-hidden="true" />
                 </button>
               </div>

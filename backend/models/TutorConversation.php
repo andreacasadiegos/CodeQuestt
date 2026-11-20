@@ -27,6 +27,26 @@ final class TutorConversation
         return array_map([$this, 'formatConversation'], $stmt->fetchAll());
     }
 
+    /**
+     * Conversación activa del estudiante que todavía no tiene mensajes.
+     * Se reutiliza para no acumular conversaciones vacías duplicadas
+     * (doble clic, StrictMode de React o varias pestañas).
+     */
+    public function findEmptyForUser(int $userId): ?int
+    {
+        $stmt = $this->db->prepare(
+            'SELECT c.id
+             FROM tutor_conversations c
+             WHERE c.user_id = ? AND c.archived_at IS NULL
+               AND NOT EXISTS (SELECT 1 FROM tutor_messages m WHERE m.conversation_id = c.id)
+             ORDER BY c.id DESC
+             LIMIT 1'
+        );
+        $stmt->execute([$userId]);
+        $id = $stmt->fetchColumn();
+        return $id === false ? null : (int) $id;
+    }
+
     public function create(int $userId): int
     {
         $sql = 'INSERT INTO tutor_conversations (user_id, title) VALUES (?, ?)';
