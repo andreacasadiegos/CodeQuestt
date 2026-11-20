@@ -78,7 +78,7 @@ final class TutorController
         try {
             $answer = (new GeminiTutorService())->reply($history, $pathName);
         } catch (RuntimeException $e) {
-            Response::error($e->getMessage(), str_contains($e->getMessage(), 'configurado') ? 503 : 502);
+            $status = str_contains($e->getMessage(), 'configurado') ? 503 : (str_contains($e->getMessage(), 'muchas solicitudes') ? 429 : 502);\n            Response::error($e->getMessage(), $status);
         }
 
         // Guardar el intercambio solo cuando Gemini respondió correctamente.
