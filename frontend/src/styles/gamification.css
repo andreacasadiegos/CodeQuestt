@@ -10,14 +10,14 @@
   padding: 0.05rem 0.45rem;
   border-radius: 999px;
   background: rgba(250, 204, 21, 0.14);
-  color: var(--cq-xp);
+  color: #966015;
   font-size: 0.75rem;
   font-weight: 700;
 }
 
 /* ---------- Nivel ---------- */
 .cq-level-card {
-  background: linear-gradient(135deg, rgba(124, 58, 237, 0.28), rgba(59, 130, 246, 0.12)), var(--cq-surface);
+  background: linear-gradient(135deg, rgba(47, 158, 85, 0.13), rgba(57, 135, 216, 0.08)), var(--cq-surface);
 }
 
 .cq-level-number {

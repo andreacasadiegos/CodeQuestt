@@ -68,7 +68,7 @@
   white-space: pre-wrap;
 }
 
-.cq-tok-key { color: #c4b5fd; font-weight: 600; }
+.cq-tok-key { color: #218b50; font-weight: 600; }
 .cq-tok-str { color: #86efac; }
 .cq-tok-num { color: #fcd34d; }
 .cq-tok-com { color: var(--cq-text-dim); font-style: italic; }
@@ -160,7 +160,7 @@
   background: var(--cq-gradient);
   color: #fff;
   font-size: 1.5rem;
-  box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4);
+  box-shadow: 0 8px 20px rgba(47, 158, 85, 0.2);
 }
 
 .cq-icon-soft {
@@ -179,7 +179,7 @@
   margin-top: 1rem;
   padding: 0.7rem 0.9rem;
   border-radius: var(--cq-radius-sm);
-  background: rgba(13, 10, 34, 0.55);
+  background: rgba(240, 247, 239, 0.95);
   border: var(--cq-border);
   font-family: var(--cq-font-code);
   font-size: 0.85rem;
@@ -199,7 +199,7 @@
 .cq-cta {
   padding: 3rem 2rem;
   background:
-    radial-gradient(500px 250px at 0% 0%, rgba(124, 58, 237, 0.5), transparent 70%),
-    radial-gradient(500px 250px at 100% 100%, rgba(59, 130, 246, 0.4), transparent 70%),
+    radial-gradient(500px 250px at 0% 0%, rgba(47, 158, 85, 0.22), transparent 70%),
+    radial-gradient(500px 250px at 100% 100%, rgba(57, 135, 216, 0.12), transparent 70%),
     var(--cq-surface-2);
 }

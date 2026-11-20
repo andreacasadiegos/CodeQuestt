@@ -14,6 +14,7 @@ import LoginPage from './pages/LoginPage.jsx';
 import ModulePage from './pages/ModulePage.jsx';
 import NotFoundPage from './pages/NotFoundPage.jsx';
 import ProgressPage from './pages/ProgressPage.jsx';
+import TutorPage from './pages/TutorPage.jsx';
 import RegisterPage from './pages/RegisterPage.jsx';
 import AdminRoute from './routes/AdminRoute.jsx';
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
@@ -46,6 +47,7 @@ export default function App() {
               <Route path="/actividades/:id" element={<ActivityPage />} />
               <Route path="/insignias" element={<BadgesPage />} />
               <Route path="/progreso" element={<ProgressPage />} />
+              <Route path="/tutor" element={<TutorPage />} />
             </Route>
 
             <Route element={<AdminRoute />}>
