@@ -219,7 +219,7 @@ export default function TutorPage() {
               </div>
             </form>
           </div>
-          <p className="cq-muted small mt-2 mb-0"><i className="bi bi-shield-check me-1" />Tus conversaciones son privadas y solo tú puedes acceder a tu historial.</p>
+          <p className="cq-muted small mt-2 mb-0"><i className="bi bi-shield-check me-1" />Tus conversaciones quedan guardadas en CodeQuest y se envían a Google Gemini para generar respuestas. Evita compartir datos personales o contraseñas.</p>
         </div>
       </div>
     </section>
