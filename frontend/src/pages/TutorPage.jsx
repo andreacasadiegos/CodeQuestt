@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-import ErrorState from '../components/ui/ErrorState.jsx';
 import LoadingScreen from '../components/ui/LoadingScreen.jsx';
 import { useAuth } from '../hooks/useAuth.js';
 import {
@@ -57,6 +56,12 @@ export default function TutorPage() {
           if (!alive) return;
           setActiveId(first.conversation.id);
           setMessages(first.messages ?? []);
+        } else {
+          const created = await createConversation();
+          if (!alive) return;
+          setConversations([created.conversation]);
+          setActiveId(created.conversation.id);
+          setMessages([]);
         }
       } catch (e) {
         if (alive) setError(e.message);
