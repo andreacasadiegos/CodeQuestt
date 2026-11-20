@@ -52,7 +52,7 @@ En internet todo vive en Vercel (frontend React + API PHP como función) y la
 base de datos en Supabase (`database/supabase/codequest_supabase.sql`).
 Los pasos están en [docs/despliegue.md](docs/despliegue.md).
 
-## Administrador
+## CodeBot (tutor educativo con IA)\n\nCodeBot usa Google Gemini desde el backend PHP y guarda el historial por estudiante. Consulta [docs/configuracion-codebot-gemini.md](docs/configuracion-codebot-gemini.md) para configurar `GEMINI_API_KEY`, `GEMINI_MODEL` y ejecutar la migración aditiva correspondiente al motor de base de datos. No publiques la clave ni la agregues a variables `VITE_*`.\n\n## Administrador
 
 Una cuenta con rol `admin` entra a `/admin` y ve los resultados de todos los
 estudiantes (ruta, nivel, XP, actividades aprobadas, promedio, insignias e
