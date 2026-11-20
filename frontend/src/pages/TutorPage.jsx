@@ -57,11 +57,8 @@ export default function TutorPage() {
           setActiveId(first.conversation.id);
           setMessages(first.messages ?? []);
         } else {
-          const created = await createConversation();
-          if (!alive) return;
-          setConversations([created.conversation]);
-          setActiveId(created.conversation.id);
-          setMessages([]);
+          // No crear automáticamente: React StrictMode puede ejecutar el efecto dos veces en desarrollo.
+          // El estudiante inicia la primera conversación desde el botón explícito.
         }
       } catch (e) {
         if (alive) setError(e.message);
