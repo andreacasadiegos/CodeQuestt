@@ -3,13 +3,34 @@ html {
   scroll-behavior: smooth;
 }
 
-body { min-height:100vh; margin:0; font-family:var(--cq-font); background:var(--cq-bg); color:var(--cq-text); }
+body {
+  min-height: 100vh;
+  margin: 0;
+  font-family: var(--cq-font);
+  background:
+    radial-gradient(900px 500px at 10% -10%, rgba(124, 58, 237, 0.28), transparent 60%),
+    radial-gradient(700px 500px at 100% 100%, rgba(59, 130, 246, 0.16), transparent 60%),
+    var(--cq-bg);
+  background-attachment: fixed;
+  color: var(--cq-text);
+}
 
 /* Rejilla tenue tipo "editor de código" sobre el fondo. */
-body::before { content:none; }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(167, 139, 250, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(167, 139, 250, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(circle at 50% 30%, black, transparent 75%);
+}
 
 a {
-  color: var(--cq-primary);
+  color: var(--cq-accent);
   text-decoration: none;
 }
 
@@ -39,7 +60,7 @@ main {
 
 /* ---------- Utilidades de marca ---------- */
 .cq-card {
-  background: var(--cq-surface);
+  background: linear-gradient(180deg, var(--cq-surface-2), var(--cq-surface));
   border: var(--cq-border);
   border-radius: var(--cq-radius);
   box-shadow: var(--cq-shadow);
@@ -54,7 +75,7 @@ main {
 }
 
 .cq-gradient-text {
-  background: linear-gradient(90deg, #2f9e55, #218b50 55%, #3987d8);
+  background: linear-gradient(90deg, #c4b5fd, #a78bfa 40%, #60a5fa);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -108,11 +129,11 @@ main {
   --bs-btn-border-color: transparent;
   --bs-btn-hover-border-color: transparent;
   background: var(--cq-gradient);
-  box-shadow: 0 8px 24px rgba(47, 158, 85, 0.22);
+  box-shadow: 0 8px 24px rgba(124, 58, 237, 0.45);
 }
 
 .btn-cq-primary:hover {
-  box-shadow: 0 12px 30px rgba(47, 158, 85, 0.28);
+  box-shadow: 0 12px 30px rgba(124, 58, 237, 0.6);
 }
 
 .btn-cq-outline {
@@ -127,6 +148,42 @@ main {
 }
 
 /* ---------- Formularios ---------- */
+/*
+ * Campos fuera de .cq-form (buscador del panel admin, chat de CodeBot):
+ * sin esto Bootstrap los pinta con fondo blanco al enfocarlos y el texto
+ * claro de la identidad oscura deja de leerse.
+ */
+.form-control,
+.form-select {
+  background-color: rgba(13, 10, 34, 0.6);
+  border: var(--cq-border);
+  color: var(--cq-text);
+}
+
+.form-control::placeholder {
+  color: var(--cq-text-dim);
+  opacity: 1;
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: rgba(13, 10, 34, 0.8);
+  border-color: var(--cq-accent);
+  box-shadow: 0 0 0 0.2rem rgba(167, 139, 250, 0.25);
+  color: var(--cq-text);
+}
+
+.form-control:disabled {
+  background-color: rgba(13, 10, 34, 0.35);
+  color: var(--cq-text-muted);
+}
+
+select.form-control option,
+.form-select option {
+  background: var(--cq-surface);
+  color: var(--cq-text);
+}
+
 .cq-form .form-label {
   font-weight: 600;
   font-size: 0.92rem;
@@ -134,7 +191,7 @@ main {
 }
 
 .cq-form .form-control {
-  background: #ffffff;
+  background: rgba(13, 10, 34, 0.6);
   border: var(--cq-border);
   border-radius: var(--cq-radius-sm);
   color: var(--cq-text);
@@ -146,9 +203,9 @@ main {
 }
 
 .cq-form .form-control:focus {
-  background: #ffffff;
+  background: rgba(13, 10, 34, 0.8);
   border-color: var(--cq-accent);
-  box-shadow: 0 0 0 0.2rem rgba(47, 158, 85, 0.18);
+  box-shadow: 0 0 0 0.2rem rgba(167, 139, 250, 0.25);
   color: var(--cq-text);
 }
 
@@ -166,7 +223,7 @@ main {
   border-left: 0;
   border-radius: 0 var(--cq-radius-sm) var(--cq-radius-sm) 0;
   color: var(--cq-text-muted);
-  background: #ffffff;
+  background: rgba(13, 10, 34, 0.6);
 }
 
 .cq-form .input-group .form-control {
@@ -185,11 +242,11 @@ main {
 .cq-alert-danger {
   background: rgba(248, 113, 113, 0.12);
   border: 1px solid rgba(248, 113, 113, 0.4);
-  color: #9f292e;
+  color: #fecaca;
 }
 
 .cq-alert-success {
   background: rgba(52, 211, 153, 0.12);
   border: 1px solid rgba(52, 211, 153, 0.4);
-  color: #176b39;
+  color: #a7f3d0;
 }

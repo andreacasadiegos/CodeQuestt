@@ -32,7 +32,7 @@
   color: var(--cq-accent);
 }
 
-.cq-kind-evaluacion { background: rgba(57, 135, 216, 0.12); color: #245d91; }
+.cq-kind-evaluacion { background: rgba(59, 130, 246, 0.16); color: #93c5fd; }
 .cq-kind-reto { background: rgba(250, 204, 21, 0.14); color: var(--cq-xp); }
 
 /* ---------- Identificar patrones ---------- */
@@ -65,7 +65,7 @@
 }
 
 @keyframes cq-pulse {
-  50% { box-shadow: 0 0 0 6px rgba(47, 158, 85, 0.12); }
+  50% { box-shadow: 0 0 0 6px rgba(167, 139, 250, 0.12); }
 }
 
 /* ---------- Completar código ---------- */
@@ -86,7 +86,7 @@
 }
 
 .cq-blank-input:focus {
-  background: rgba(47, 158, 85, 0.14);
+  background: rgba(167, 139, 250, 0.26);
   box-shadow: 0 2px 0 var(--cq-cyan);
 }
 
@@ -181,7 +181,7 @@
 .cq-xp-card {
   padding: 1.25rem;
   border-radius: var(--cq-radius);
-  background: linear-gradient(135deg, rgba(47, 158, 85, 0.16), rgba(57, 135, 216, 0.10));
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.22), rgba(59, 130, 246, 0.14));
   border: var(--cq-border);
 }
 

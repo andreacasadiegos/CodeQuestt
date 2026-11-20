@@ -3,12 +3,12 @@
   margin: 0 0 1.25rem;
   padding: 1rem 1.25rem;
   border-radius: var(--cq-radius-sm);
-  background: #f0f5f0;
+  background: rgba(13, 10, 34, 0.75);
   border: var(--cq-border);
   font-family: var(--cq-font-code);
   font-size: 0.95rem;
   line-height: 1.7;
-  color: #26382d;
+  color: #e9e5ff;
   white-space: pre-wrap;
 }
 
@@ -20,7 +20,7 @@
   padding: 0.95rem 1.1rem;
   border-radius: var(--cq-radius-sm);
   border: var(--cq-border);
-  background: #ffffff;
+  background: rgba(13, 10, 34, 0.45);
   color: var(--cq-text);
   text-align: left;
   font-size: 1rem;
@@ -214,7 +214,7 @@ a.cq-lesson-row:hover {
 }
 
 .cq-lesson-content strong {
-  color: #257a43;
+  color: #ddd6fe;
 }
 
 .cq-lesson-content ul {
