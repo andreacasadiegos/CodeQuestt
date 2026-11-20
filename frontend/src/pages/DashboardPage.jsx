@@ -52,7 +52,15 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="cq-card cq-dashboard-tutor p-4 mt-4 d-flex flex-wrap align-items-center justify-content-between gap-3 cq-fade-up">\n        <div className="d-flex align-items-center gap-3">\n          <span className="cq-dashboard-tutor-icon"><i className="bi bi-robot" aria-hidden="true" /></span>\n          <div><span className="cq-eyebrow">tu tutor inteligente</span><h2 className="h5 fw-bold mt-2 mb-1">¿Necesitas una pista para continuar?</h2><p className="cq-muted mb-0">CodeBot te ayuda con abstracción, patrones y algoritmos.</p></div>\n        </div>\n        <Link to="/tutor" className="btn btn-cq btn-cq-primary">Hablar con CodeBot <i className="bi bi-arrow-right" /></Link>\n      </div>\n\n      <SectionTitle title="Tus módulos" aside={`Contenido de la ${user.path.name.toLowerCase()}`} />
+      <div className="cq-card cq-dashboard-tutor p-4 mt-4 d-flex flex-wrap align-items-center justify-content-between gap-3 cq-fade-up">
+        <div className="d-flex align-items-center gap-3">
+          <span className="cq-dashboard-tutor-icon"><i className="bi bi-robot" aria-hidden="true" /></span>
+          <div><span className="cq-eyebrow">tu tutor inteligente</span><h2 className="h5 fw-bold mt-2 mb-1">¿Necesitas una pista para continuar?</h2><p className="cq-muted mb-0">CodeBot te ayuda con abstracción, patrones y algoritmos.</p></div>
+        </div>
+        <Link to="/tutor" className="btn btn-cq btn-cq-primary">Hablar con CodeBot <i className="bi bi-arrow-right" /></Link>
+      </div>
+
+      <SectionTitle title="Tus módulos" aside={`Contenido de la ${user.path.name.toLowerCase()}`} />
       <div className="row g-4">
         {modules.map((module) => (
           <div key={module.id} className="col-md-6 col-lg-4">
