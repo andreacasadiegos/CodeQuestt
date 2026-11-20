@@ -3,34 +3,13 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  min-height: 100vh;
-  margin: 0;
-  font-family: var(--cq-font);
-  background:
-    radial-gradient(900px 500px at 10% -10%, rgba(124, 58, 237, 0.28), transparent 60%),
-    radial-gradient(700px 500px at 100% 100%, rgba(59, 130, 246, 0.16), transparent 60%),
-    var(--cq-bg);
-  background-attachment: fixed;
-  color: var(--cq-text);
-}
+body { min-height:100vh; margin:0; font-family:var(--cq-font); background:var(--cq-bg); color:var(--cq-text); }
 
 /* Rejilla tenue tipo "editor de código" sobre el fondo. */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image:
-    linear-gradient(rgba(167, 139, 250, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(167, 139, 250, 0.05) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(circle at 50% 30%, black, transparent 75%);
-}
+body::before { content:none; }
 
 a {
-  color: var(--cq-accent);
+  color: var(--cq-primary);
   text-decoration: none;
 }
 
@@ -60,7 +39,7 @@ main {
 
 /* ---------- Utilidades de marca ---------- */
 .cq-card {
-  background: linear-gradient(180deg, var(--cq-surface-2), var(--cq-surface));
+  background: var(--cq-surface);
   border: var(--cq-border);
   border-radius: var(--cq-radius);
   box-shadow: var(--cq-shadow);
@@ -155,7 +134,7 @@ main {
 }
 
 .cq-form .form-control {
-  background: rgba(13, 10, 34, 0.6);
+  background: #ffffff;
   border: var(--cq-border);
   border-radius: var(--cq-radius-sm);
   color: var(--cq-text);
@@ -167,9 +146,9 @@ main {
 }
 
 .cq-form .form-control:focus {
-  background: rgba(13, 10, 34, 0.8);
+  background: #ffffff;
   border-color: var(--cq-accent);
-  box-shadow: 0 0 0 0.2rem rgba(167, 139, 250, 0.25);
+  box-shadow: 0 0 0 0.2rem rgba(47, 158, 85, 0.18);
   color: var(--cq-text);
 }
 
@@ -187,7 +166,7 @@ main {
   border-left: 0;
   border-radius: 0 var(--cq-radius-sm) var(--cq-radius-sm) 0;
   color: var(--cq-text-muted);
-  background: rgba(13, 10, 34, 0.6);
+  background: #ffffff;
 }
 
 .cq-form .input-group .form-control {
@@ -206,11 +185,11 @@ main {
 .cq-alert-danger {
   background: rgba(248, 113, 113, 0.12);
   border: 1px solid rgba(248, 113, 113, 0.4);
-  color: #fecaca;
+  color: #9f292e;
 }
 
 .cq-alert-success {
   background: rgba(52, 211, 153, 0.12);
   border: 1px solid rgba(52, 211, 153, 0.4);
-  color: #a7f3d0;
+  color: #176b39;
 }
