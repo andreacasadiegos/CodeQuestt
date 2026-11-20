@@ -15,6 +15,19 @@ final class AuthController
     /** bcrypt solo usa los primeros 72 bytes de la contraseña. */
     private const PASSWORD_MAX_BYTES = 72;
 
+    /**
+     * Fuerza bruta: intentos fallidos permitidos cada 15 minutos por correo+IP
+     * y por IP. El límite por IP es amplio porque un salón entero suele salir
+     * a internet con la misma IP pública del colegio.
+     */
+    private const LOGIN_MAX_FAILURES = 8;
+    private const LOGIN_IP_MAX_FAILURES = 100;
+    private const LOGIN_WINDOW = 900;
+
+    /** Registro masivo: cuentas nuevas por IP cada hora (alcanza para varios cursos). */
+    private const REGISTER_MAX_PER_IP = 120;
+    private const REGISTER_WINDOW = 3600;
+
     private User $users;
 
     public function __construct()
@@ -56,6 +69,13 @@ final class AuthController
             Response::error('Revisa los datos del formulario.', 422, $v->errors());
         }
 
+        $limiter = new RateLimiter();
+        $ipKey = 'register:' . RateLimiter::clientIp();
+        if ($limiter->tooMany($ipKey, self::REGISTER_MAX_PER_IP, self::REGISTER_WINDOW)) {
+            Response::error('Se crearon demasiadas cuentas desde esta conexión. Inténtalo más tarde.', 429);
+        }
+        $limiter->hit($ipKey, self::REGISTER_WINDOW);
+
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $userId = $this->users->create($fullName, $email, $hash);
 
@@ -81,11 +101,21 @@ final class AuthController
             Response::error('Revisa los datos del formulario.', 422, $v->errors());
         }
 
+        $limiter = new RateLimiter();
+        $emailKey = 'login:' . $email . '|' . RateLimiter::clientIp();
+        $ipKey = 'login-ip:' . RateLimiter::clientIp();
+        if ($limiter->tooMany($emailKey, self::LOGIN_MAX_FAILURES, self::LOGIN_WINDOW)
+            || $limiter->tooMany($ipKey, self::LOGIN_IP_MAX_FAILURES, self::LOGIN_WINDOW)) {
+            Response::error('Demasiados intentos fallidos. Espera unos minutos e inténtalo de nuevo.', 429);
+        }
+
         $credentials = $this->users->findCredentialsByEmail($email);
 
         // Mismo mensaje si el correo no existe o la contraseña es incorrecta,
         // para no revelar qué correos están registrados.
         if ($credentials === null || !password_verify($password, $credentials['password_hash'])) {
+            $limiter->hit($emailKey, self::LOGIN_WINDOW);
+            $limiter->hit($ipKey, self::LOGIN_WINDOW);
             Response::error('Correo o contraseña incorrectos.', 401);
         }
 
@@ -95,6 +125,7 @@ final class AuthController
             $this->users->updatePasswordHash($userId, password_hash($password, PASSWORD_DEFAULT));
         }
 
+        $limiter->clear($emailKey, self::LOGIN_WINDOW);
         Session::login($userId);
 
         Response::json(['user' => $this->users->findProfile($userId)]);

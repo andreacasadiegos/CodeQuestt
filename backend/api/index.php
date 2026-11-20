@@ -41,6 +41,11 @@ set_error_handler(function (int $severity, string $message, string $file, int $l
 
 date_default_timezone_set(Config::get('app')['timezone']);
 header('X-Content-Type-Options: nosniff');
+// Las respuestas contienen datos privados del estudiante: no se guardan
+// en cachés compartidas ni se muestran dentro de marcos de otros sitios.
+header('Cache-Control: no-store');
+header('X-Frame-Options: DENY');
+header('Referrer-Policy: same-origin');
 
 Session::start();
 

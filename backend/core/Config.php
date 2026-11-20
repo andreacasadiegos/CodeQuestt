@@ -26,7 +26,7 @@ final class Config
     }
 
     /**
-     * Configuración a partir de variables de entorno (Vercel).
+     * Configuración a partir de variables de entorno (Vercel o VPS).
      * DATABASE_URL es la cadena "Session pooler" de Supabase, por ejemplo:
      * postgresql://postgres.abc:CONTRASEÑA@aws-0-us-east-1.pooler.supabase.com:5432/postgres
      */
@@ -38,12 +38,14 @@ final class Config
         }
 
         $scheme = $parts['scheme'] ?? 'postgresql';
+        $isMysql = str_starts_with($scheme, 'mysql') || str_starts_with($scheme, 'mariadb');
 
         return [
             'db' => [
-                'driver'   => str_starts_with($scheme, 'mysql') ? 'mysql' : 'pgsql',
+                'driver'   => $isMysql ? 'mysql' : 'pgsql',
                 'host'     => $parts['host'],
-                'port'     => (int) ($parts['port'] ?? 5432),
+                // Puerto por defecto según el motor (antes siempre era 5432).
+                'port'     => (int) ($parts['port'] ?? ($isMysql ? 3306 : 5432)),
                 'name'     => ltrim($parts['path'] ?? '/postgres', '/') ?: 'postgres',
                 'user'     => rawurldecode($parts['user'] ?? 'postgres'),
                 'password' => rawurldecode($parts['pass'] ?? ''),
@@ -59,7 +61,10 @@ final class Config
                 'idle_timeout' => 7200,
                 // En Vercel cada petición puede ir a un servidor distinto:
                 // la sesión se guarda en la base de datos, no en archivos.
-                'handler'      => 'database',
+                // En un VPS puede usarse SESSION_HANDLER=files.
+                'handler'      => getenv('SESSION_HANDLER') ?: 'database',
+                // SESSION_COOKIE_SECURE=1 obliga a enviar la cookie solo por HTTPS.
+                'secure'       => getenv('SESSION_COOKIE_SECURE') === '1',
             ],
         ];
     }

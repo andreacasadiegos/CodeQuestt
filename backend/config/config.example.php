@@ -41,5 +41,15 @@ return [
     'session' => [
         'name'            => 'CODEQUESTSESSID',
         'idle_timeout'    => 7200,   // Segundos de inactividad antes de cerrar la sesión (2 horas).
+        // 'handler' => 'database', // Opcional: guardar sesiones en la base (varios servidores).
+        // 'secure'  => true,       // En producción con HTTPS: la cookie solo viaja cifrada.
     ],
+
+    // CodeBot (Google Gemini). Lo recomendado es la variable de entorno
+    // GEMINI_API_KEY; este bloque es una alternativa para servidores donde
+    // no se pueden definir variables. Nunca pongas la clave en el frontend.
+    // 'gemini' => [
+    //     'api_key' => 'TU_CLAVE_DE_GEMINI',
+    //     'model'   => 'gemini-2.5-flash-lite',
+    // ],
 ];

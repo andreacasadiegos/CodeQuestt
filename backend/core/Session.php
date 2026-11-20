@@ -3,6 +3,8 @@
  * Manejo seguro de la sesión PHP.
  *
  * - Cookie HttpOnly (JavaScript no puede leerla) y SameSite=Lax.
+ * - Cookie Secure cuando la petición llega por HTTPS (o si se fuerza con
+ *   'secure' => true en config.php / SESSION_COOKIE_SECURE=1).
  * - Nuevo identificador al iniciar sesión (evita la fijación de sesión).
  * - Cierre automático tras un tiempo de inactividad.
  */
@@ -29,7 +31,8 @@ final class Session
         session_set_cookie_params([
             'lifetime' => 0,
             'path'     => '/',
-            'secure'   => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+            'secure'   => !empty($config['secure'])
+                || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
                 || ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https',
             'httponly' => true,
             'samesite' => 'Lax',

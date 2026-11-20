@@ -50,6 +50,12 @@ final class Database
                 // igual que en MySQL (Supabase usa UTC por defecto).
                 $stmt = self::$connection->prepare('SELECT set_config(\'TimeZone\', ?, false)');
                 $stmt->execute([Config::get('app')['timezone']]);
+            } else {
+                // MySQL usa la zona del servidor (en un VPS suele ser UTC).
+                // Se alinea con la de PHP para que CURRENT_TIMESTAMP y date()
+                // coincidan (límite diario de CodeBot, historial, progreso).
+                $stmt = self::$connection->prepare('SET time_zone = ?');
+                $stmt->execute([date('P')]);
             }
         }
 
