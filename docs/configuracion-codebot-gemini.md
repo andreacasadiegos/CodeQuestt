@@ -30,9 +30,28 @@ SetEnv GEMINI_MODEL "gemini-2.5-flash-lite"
 
 Reinicia Apache. No guardes la clave en un archivo que se suba al repositorio. Si tu configuración local no permite SetEnv, define las variables en el entorno del proceso Apache siguiendo la configuración de tu instalación.
 
+## 3b. Configurar en un VPS (PHP-FPM)
+
+PHP-FPM **borra las variables de entorno** por defecto (`clear_env = yes`), así
+que exportarlas en la terminal no basta. Agrégalas al pool de PHP-FPM
+(ver `deploy/php-fpm-codequest.conf`):
+
+```ini
+env[GEMINI_API_KEY] = "TU_CLAVE"
+env[GEMINI_MODEL] = "gemini-2.5-flash-lite"
+```
+
+y reinicia PHP-FPM (`sudo systemctl restart php8.3-fpm`). Protege el archivo
+con `chmod 600` y propietario `root:root`.
+
+Alternativa: el bloque `'gemini' => ['api_key' => ..., 'model' => ...]` de
+`backend/config/config.php` (archivo que **no** se sube a Git). Si existen
+ambos, gana la variable de entorno.
+
 ## 4. Límites iniciales
 
-- Máximo 20 mensajes del estudiante en una ventana móvil de 24 horas.
+- Máximo 20 mensajes del estudiante en una ventana móvil de 24 horas (la página muestra cuántos le quedan).
+- Máximo 30 conversaciones nuevas por estudiante al día; si ya tiene una conversación vacía, «Nueva conversación» la reutiliza en lugar de crear otra.
 - Máximo 2.000 caracteres por mensaje.
 - Máximo 12 mensajes previos enviados como contexto al modelo.
 - Máximo 900 tokens de salida por respuesta.
@@ -53,7 +72,12 @@ Ejecuta **solo una** migración, según el motor de la base de datos:
 - MySQL/XAMPP: `database/migrations/20261120_tutor_gemini_mysql.sql`
 - Supabase/PostgreSQL: `database/supabase/migracion_codebot.sql`
 
-Son migraciones aditivas. No ejecutes `database/01_schema.sql` para habilitar CodeBot, porque ese script elimina y vuelve a crear la base de datos.
+Son migraciones aditivas e idempotentes (se pueden ejecutar otra vez sin
+riesgo). La de Supabase activa RLS en `tutor_conversations` y `tutor_messages`
+para que la API pública de Supabase no pueda leer las conversaciones: **si ya
+la ejecutaste antes del 20/11/2026, ejecútala de nuevo** para aplicar ese RLS.
+
+No ejecutes `database/01_schema.sql` para habilitar CodeBot, porque ese script elimina y vuelve a crear la base de datos.
 
 ## 6. Endpoints privados
 

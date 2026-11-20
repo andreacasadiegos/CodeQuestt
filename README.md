@@ -52,7 +52,35 @@ En internet todo vive en Vercel (frontend React + API PHP como función) y la
 base de datos en Supabase (`database/supabase/codequest_supabase.sql`).
 Los pasos están en [docs/despliegue.md](docs/despliegue.md).
 
-## CodeBot (tutor educativo con IA)\n\nCodeBot usa Google Gemini desde el backend PHP y guarda el historial por estudiante. Consulta [docs/configuracion-codebot-gemini.md](docs/configuracion-codebot-gemini.md) para configurar `GEMINI_API_KEY`, `GEMINI_MODEL` y ejecutar la migración aditiva correspondiente al motor de base de datos. No publiques la clave ni la agregues a variables `VITE_*`.\n\n## Administrador
+## Publicar en un VPS (Linux)
+
+Nginx o Apache + PHP-FPM + MySQL/MariaDB o PostgreSQL, con HTTPS, sesiones
+seguras y copias de seguridad: [docs/despliegue-vps.md](docs/despliegue-vps.md).
+Las configuraciones de ejemplo están en [`deploy/`](deploy/).
+
+## CodeBot (tutor educativo con IA)
+
+CodeBot usa Google Gemini desde el backend PHP y guarda el historial por
+estudiante. Consulta [docs/configuracion-codebot-gemini.md](docs/configuracion-codebot-gemini.md)
+para configurar `GEMINI_API_KEY`, `GEMINI_MODEL` y ejecutar la migración
+aditiva correspondiente al motor de base de datos. No publiques la clave ni
+la agregues a variables `VITE_*`.
+
+## Pruebas
+
+```bash
+# Frontend: compilación de producción
+cd frontend && npm install && npm run build
+
+# API: pruebas de integración por HTTP (SOLO contra una base de pruebas;
+# crean cuentas @codequest.test)
+CQ_API_URL=http://127.0.0.1:8080/api CQ_ALLOW_TEST_WRITES=1 php backend/tests/api_integration_test.php
+```
+
+Con `CQ_EXPECT_GEMINI=1` (y `GEMINI_API_KEY` en el servidor) la prueba envía
+una pregunta real a CodeBot y exige respuesta y persistencia.
+
+## Administrador
 
 Una cuenta con rol `admin` entra a `/admin` y ve los resultados de todos los
 estudiantes (ruta, nivel, XP, actividades aprobadas, promedio, insignias e
